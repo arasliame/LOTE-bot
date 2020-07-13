@@ -1,0 +1,77 @@
+{
+    "sinrok": {
+        "character name": "Sinrok",
+        "playbook": "The Warrior",
+        "username": "Alakadayummm#5334",
+        "player name": "Joe",
+        "stats": {
+            "natural": -1,
+            "hot": 2,
+            "solid": 1,
+            "keen": 0,
+            "fluid": 1
+        },
+        "chakra1": "violent and frightening",
+        "chakra2": "relentlessly driven toward single goal"
+    },
+    "leigh": {
+        "character name": "Leigh",
+        "playbook": "The Airshaper",
+        "username": "gnersesy#4330",
+        "player name": "Gaya",
+        "stats": {
+            "natural": 2,
+            "hot": 1,
+            "solid": -1,
+            "keen": 0,
+            "fluid": 1
+        },
+        "chakra1": "hasty and quick-to-react",
+        "chakra2": "spacey and whimsical"
+    },
+    "zhang fire": {
+        "character name": "Zhang Fire",
+        "playbook": "The Fireshaper",
+        "username": "shamisen__#4905",
+        "player name": "Karl",
+        "stats": {
+            "natural": -1,
+            "hot": 2,
+            "solid": 1,
+            "keen": 0,
+            "fluid": 1
+        },
+        "chakra1": "volatile and explosive",
+        "chakra2": "honorable and disciplined"
+    },
+    "pile": {
+        "character name": "Pile",
+        "playbook": "The Earthshaper",
+        "username": "sluser#0962",
+        "player name": "Freddy",
+        "stats": {
+            "natural": 1,
+            "hot": -1,
+            "solid": 2,
+            "keen": 0,
+            "fluid": 1
+        },
+        "chakra1": "unmoving and cautious",
+        "chakra2": "dependable and hard-working"
+    },
+    "honri": {
+        "character name": "Honri",
+        "playbook": "The Naturalist",
+        "username": "Carmine#3569",
+        "player name": "Colin",
+        "stats": {
+            "natural": 2,
+            "hot": -1,
+            "solid": 0,
+            "keen": 1,
+            "fluid": 1
+        },
+        "chakra1": "easygoing and carefree",
+        "chakra2": "honest and direct"
+    }
+}
