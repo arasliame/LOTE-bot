@@ -29,7 +29,7 @@ async def on_ready():
 
 # roll based on character sheet or roll with a modifier depending on user input
 @bot.command(name='r', help='Roll 2d6 plus a stat or numeric modifier. By default, use the character your Discord user is associated with, or specify a specific character.')
-async def botroll(ctx, stat=None, character="user"):
+async def botroll(ctx, stat='0', character="user"):
     
     character = matchabbr(character,charabbrs)
     charinfo,response = botgetcharinfo(ctx,character,chardata)
@@ -46,8 +46,6 @@ async def botroll(ctx, stat=None, character="user"):
                 response = f'{ctx.message.author.mention}: Invalid stat, try again.'
             else:
                 response = botrollstring(ctx,stat,charinfo)
-        except TypeError:
-            response = "Stat/modifier cannot be empty, try again."
         await ctx.send(response)
 
 @bot.command(name='m', help='Do a specific move. By default, use the character your Discord user is associated with, or specify a character to roll for.')
