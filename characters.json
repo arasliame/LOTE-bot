@@ -12,7 +12,8 @@
             "fluid": 1
         },
         "chakra1": "violent and frightening",
-        "chakra2": "relentlessly driven toward single goal"
+        "chakra2": "relentlessly driven toward single goal",
+        "custom moves": {}
     },
     "leigh": {
         "character name": "Leigh",
@@ -27,7 +28,18 @@
             "fluid": 1
         },
         "chakra1": "hasty and quick-to-react",
-        "chakra2": "spacey and whimsical"
+        "chakra2": "spacey and whimsical",
+        "custom moves": {
+            "airbending": {
+                "name": "Airbending",
+                "stat": "natural",
+                "description": "When you manipulate the air to control the area, roll +Natural.",
+                "results": {
+                    "gs": "Add 1 to your rolls until you stop moving and choose one: \n - Immobilize a foe. \n - Move as fast as the wind. \n - Perform a great feat of acrobatics.\n - Reposition the battlefield.",
+                    "ms": "Choose one: \n - Immobilize a foe. \n - Move as fast as the wind. \n - Perform a great feat of acrobatics.\n - Reposition the battlefield."
+                }
+            }
+        }
     },
     "zhang fire": {
         "character name": "Zhang Fire",
@@ -42,7 +54,18 @@
             "fluid": 1
         },
         "chakra1": "volatile and explosive",
-        "chakra2": "honorable and disciplined"
+        "chakra2": "honorable and disciplined",
+        "custom moves": {
+            "firebending": {
+                "name": "Firebending",
+                "stat": "hot",
+                "description": "When you create or manipulate open flame to attack, roll +Hot.",
+                "results": {
+                    "gs": "It does what you want, Tagging targets as appropriate.",
+                    "ms": "Tag your target, but you also lose control of your flame in some manner, choose one: \n - The flames are larger and more taxing than intended. They burn hot and strong, but take -1 to the next roll you make. \n - The flames explode into being, injuring all nearby, including the Fireshaper. Add Tags as appropriate.\n - You set fire to the area. Add a relevant Environment Tag."
+                }
+            }
+        }
     },
     "pile": {
         "character name": "Pile",
@@ -57,7 +80,18 @@
             "fluid": 1
         },
         "chakra1": "unmoving and cautious",
-        "chakra2": "dependable and hard-working"
+        "chakra2": "dependable and hard-working",
+        "custom moves": {
+            "earthbending": {
+                "name": "Earthbending",
+                "stat": "solid",
+                "description": "When you alter the battlefield’s topography, roll +Solid.",
+                "results": {
+                    "gs": "Add an appropriate Environment Tag. Anyone taking advantage of this Environment Tag when making a Move adds +1 to their roll.",
+                    "ms": "Add an appropriate Environment Tag."
+                }
+            }
+        }
     },
     "honri": {
         "character name": "Honri",
@@ -72,6 +106,26 @@
             "fluid": 1
         },
         "chakra1": "easygoing and carefree",
-        "chakra2": "honest and direct"
+        "chakra2": "honest and direct",
+        "custom moves": {
+            "force of nature": {
+                "name": "Force of Nature",
+                "stat": "solid",
+                "description": "When you expose yourself to a great force of nature, roll +Solid.",
+                "results": {
+                    "gs": "Choose two: \n - Redirect the damage done \n - Reduce the force's power \n - Briefly hold the storm at bay \n - Channel its power, at a cost",
+                    "ms": "Choose one: \n - Redirect the damage done \n - Reduce the force's power \n - Briefly hold the storm at bay \n - Channel its power, at a cost"
+                }
+            },
+            "restoration": {
+                "name": "Restoration",
+                "stat": "natural",
+                "description": "When you try to heal a wound inflicted on nature, roll +Natural.",
+                "results": {
+                    "gs": "A controlled rapid surge of life begins to heal the damaged elements.",
+                    "ms": "Choose one: \n - Life returns, but not as you expected. \n - Mutations cause the new life to grow beyond even your control. \n - It will take great time to heal."
+                }
+            }
+        }
     }
 }

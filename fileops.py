@@ -16,9 +16,10 @@ def loaddata(filename):
 def loadvarsfromfiles(characterfile,movefile):
     # load info from files
     chardata = loaddata(characterfile)
-    movedata = loaddata(movefile)
+    allmovedata = loaddata(movefile)
+    movedata = allmovedata
 
-    # get all character names
+    # get all character abbrevs
     allchars = tuple(chardata.keys())
     charabbrs = loadabbrs(allchars)
 
@@ -32,7 +33,7 @@ def loadvarsfromfiles(characterfile,movefile):
 
     logging.info(f"{characterfile} and {movefile} loaded for session.")
 
-    return chardata,movedata,allchars,charabbrs,allstats,statabbrs,allmoves,moveabbrs
+    return chardata,movedata,charabbrs,allstats,statabbrs,moveabbrs
 
 def loadabbrs(allvars):
     finaldict = dict()
@@ -57,6 +58,11 @@ def loadabbrs(allvars):
                     finaldict[item].add(y)
                     finaldict[item].add(y.replace(" ",""))
     
+    finaldict = dedupabbrs(finaldict)
+                
+    return finaldict
+
+def dedupabbrs(finaldict):
     for key, value in finaldict.items():
         for key2, value2 in finaldict.items():
             if key != key2:
@@ -65,6 +71,20 @@ def loadabbrs(allvars):
                 finaldict[key2] = finaldict[key2].difference(intersect)
                 
     return finaldict
+
+# temporarily add character moves to moveabbrs and movedata
+def addcharmoves(charinfo,movedata,moveabbrs):
+    cmovedata = dict()
+
+    for key,cmove in charinfo["custom moves"].items():
+        cmovedata[key] = cmove
+
+    cmoveabbrs = loadabbrs(cmovedata.keys())
+    cmovedata.update(movedata)
+    cmoveabbrs.update(moveabbrs)
+    cmoveabbrs = dedupabbrs(cmoveabbrs)
+    
+    return cmovedata,cmoveabbrs
 
 # saves whatever is in the chardata dict into json, doesn't reload any of the other variables
 def savechardata(chardata,characterfile):

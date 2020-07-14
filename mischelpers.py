@@ -71,7 +71,7 @@ def moveresult(moveinfo,roll):
 # make the bot roll a character move
 def botcharmove(ctx,moveinfo,charinfo):
     roll = charmove(moveinfo, charinfo)
-    mod = f'to {moveinfo.get("name").title()} (+{moveinfo.get("stat").title()})'
+    mod = f'{moveinfo.get("name").title()} (+{moveinfo.get("stat").title()})'
     response = responsestr(ctx,charinfo,mod,roll,moveinfo)
 
     return response
@@ -111,3 +111,4 @@ def responsestr(ctx,charinfo,mod,roll,moveinfo=None):
         )
     
     return response
+

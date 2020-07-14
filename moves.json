@@ -1,4 +1,4 @@
-{
+{ 
     "speak honorably": {
         "name": "Speak Honorably",
         "stat": "natural",
@@ -32,7 +32,7 @@
         "description": "When you strike out violently with intent to kill or incapacitate, roll +Hot.",
         "results": {
             "gs": "Your attack is successful; Tag the target appropriately.",
-            "ms": "Choose one: \n- You don't Tag them \n- You're left in a disadvantageous position \n- You're left open to their counterattack"
+            "ms": "Your attack is successful and you can Tag the target, but your move comes with complications. Choose one: \n- You don't Tag them \n- You're left in a disadvantageous position \n- You're left open to their counterattack"
         }
     },
     "stand fast": {
