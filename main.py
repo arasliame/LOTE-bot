@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from discord.ext import commands
-from fileops import loadvarsfromfiles,addcharmoves
+from fileops import loadvarsfromfiles,addcharmoves,savechardata
 from mischelpers import matchabbr,botgetcharinfo,botcharmove,botrollint,botrollstring
 import logging
 
@@ -16,11 +16,11 @@ logging.basicConfig(level=logging.WARNING,
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 bot = commands.Bot(command_prefix='.')
-'''
+
 @bot.event
 async def on_command_error(ctx,error):
     logging.error(f"Unhandled message: {error}. Command: {ctx.command}. Args: {ctx.args}")
-'''
+
 @bot.event
 async def on_ready():
     readystr = f'{bot.user.name} has connected to Discord!'
@@ -105,7 +105,7 @@ def listmovedata():
         )
 
     # custom character moves
-    responselist.append("\n*Character-specific Moves*")
+    responselist.append("\n*Character-Specific Moves*")
     for character in chardata:
         for cmove in chardata.get(character).get("custom moves").values():
             responselist.append(
