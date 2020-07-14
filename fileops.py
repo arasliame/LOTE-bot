@@ -8,7 +8,7 @@ def loaddata(filename):
     directory = os.path.dirname(__file__)
     fullpath = os.path.abspath(os.path.join(directory, filename))
    
-    with open(filename, 'r', encoding='utf-8') as fin:
+    with open(fullpath, 'r', encoding='utf-8') as fin:
         filedata = json.load(fin)
     return filedata
 
