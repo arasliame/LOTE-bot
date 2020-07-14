@@ -35,8 +35,8 @@
                 "stat": "natural",
                 "description": "When you manipulate the air to control the area, roll +Natural.",
                 "results": {
-                    "gs": "Add +1 to your rolls until you stop moving and choose one: \n- Immobilize a foe \n- Move as fast as the wind \n- Perform a great feat of acrobatics \n- Reposition the battlefield",
-                    "ms": "Choose one: \n- Immobilize a foe. \n- Move as fast as the wind \n- Perform a great feat of acrobatics \n- Reposition the battlefield"
+                    "gs": "Add +1 to your rolls until you stop moving and choose one: \n - Immobilize a foe \n - Move as fast as the wind \n - Perform a great feat of acrobatics \n - Reposition the battlefield",
+                    "ms": "Choose one: \n - Immobilize a foe. \n - Move as fast as the wind \n - Perform a great feat of acrobatics \n - Reposition the battlefield"
                 }
             }
         }
@@ -113,8 +113,8 @@
                 "stat": "solid",
                 "description": "When you expose yourself to a great force of nature, roll +Solid.",
                 "results": {
-                    "gs": "Choose two: \n- Redirect the damage done \n- Reduce the force's power \n- Briefly hold the storm at bay \n- Channel its power, at a cost",
-                    "ms": "Choose one: \n- Redirect the damage done \n- Reduce the force's power \n- Briefly hold the storm at bay \n- Channel its power, at a cost"
+                    "gs": "Choose two: \n - Redirect the damage done \n - Reduce the force's power \n - Briefly hold the storm at bay \n - Channel its power, at a cost",
+                    "ms": "Choose one: \n - Redirect the damage done \n - Reduce the force's power \n - Briefly hold the storm at bay \n - Channel its power, at a cost"
                 }
             },
             "restoration": {
@@ -123,7 +123,7 @@
                 "description": "When you try to heal a wound inflicted on nature, roll +Natural.",
                 "results": {
                     "gs": "A controlled rapid surge of life begins to heal the damaged elements.",
-                    "ms": "Choose one: \n- Life returns, but not as you expected. \n- Mutations cause the new life to grow beyond even your control. \n- It will take great time to heal."
+                    "ms": "Choose one: \n - Life returns, but not as you expected. \n - Mutations cause the new life to grow beyond even your control. \n - It will take great time to heal."
                 }
             }
         }
