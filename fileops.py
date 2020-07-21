@@ -4,6 +4,7 @@ from shutil import copyfile
 from datetime import datetime
 import logging
 
+
 def loaddata(filename):
     directory = os.path.dirname(__file__)
     fullpath = os.path.abspath(os.path.join(directory, filename))
@@ -34,8 +35,6 @@ def loadvarsfromfiles(characterfile,movefile):
     logging.info(f"{characterfile} and {movefile} loaded for session.")
 
     return chardata,movedata,charabbrs,allstats,statabbrs,moveabbrs
-
-
 
 # could convert this to use the filter function https://stackoverflow.com/questions/20972367/python-autocomplete-user-input
 def loadabbrs(allvars):
@@ -75,21 +74,14 @@ def dedupabbrs(finaldict):
                 
     return finaldict
 
-# temporarily add character moves to moveabbrs and movedata
-def addcharmoves(charinfo,movedata,moveabbrs):
-    cmovedata = dict()
-
-    for key,cmove in charinfo["custom moves"].items():
-        cmovedata[key] = cmove
-
-    cmoveabbrs = loadabbrs(cmovedata.keys())
+# make a temporary dict for custom character moves
+def addcharmoves(charinfo,movedata):
+    cmovedata = charinfo["custom moves"].copy()
     cmovedata.update(movedata)
-    cmoveabbrs.update(moveabbrs)
-    cmoveabbrs = dedupabbrs(cmoveabbrs)
     
-    return cmovedata,cmoveabbrs
+    return cmovedata
 
-# saves whatever is in the chardata dict into json, doesn't reload any of the other variables
+# saves whatever is in the chardata dict into json file, doesn't reload any of the other variables
 def savechardata(chardata,characterfile):
     directory = os.path.dirname(__file__)
     fullpath = os.path.abspath(os.path.join(directory, characterfile))

@@ -73,8 +73,6 @@ class fiascoplayer():
         self.scores[scorekind]["totalval"] = abs(final)
 
         return resp
-    # func to roll the dice that you have
-
     
 
 class fiascorelationship():
@@ -118,30 +116,24 @@ class fiascotilt():
     def disp(self):
         return f"```Tilt: {self.category.upper()} - {self.element}```"
 
-    
     def __repr__(self):
-        return f'{self.category}{self.element}'
+        return f'{self.category.upper()} - {self.element}'
 
 def gettilttable(soft=None):
     t = loadtables("fiascotables.json","tilt") if not soft else loadtables("fiascotables.json","softtilt")
-    
 
-
-def checkabbrs(inp,inputdict):
-    abbrs = list(filter(lambda x: x.startswith(inp),inputdict.keys()))
+def checkabbrs(inp,inputlist):
+    abbrs = list(filter(lambda x: x.startswith(inp),inputlist))
 
     if not abbrs:
-        # print('no match found')
+        # no match found
         return inp
     elif len(abbrs) > 1:
-        # print('input was not specific enough')
+        # input not specific enough
         return inp
     else:
-        # Only one team found, so print that team.
         return abbrs[0]
 
-
-    
 
 class fiascodie():
     def __init__(self,dietype=None):
@@ -152,23 +144,16 @@ class fiascodie():
     def roll(self):
         self.dienum = random.randint(1,6)
         return self.dienum
-    # add optional init param to give die a dietype?
-    # add optional init param to give die a number?
-
-    
 
     def __repr__(self):
         # need this to take into account dietypes probably?
         return f'{self.dietype.title()} {self.dienum}' if self.dietype else str(self.dienum)
     
-
-# funcs for each stage of the game
 def setupdice(numplayers):
     numdice = numplayers * 4
     alldice = []
-
     for x in range(numdice): alldice.append(fiascodie())
-    
+
     return alldice
 
 def addplayer(allplayers,playername,username):
@@ -189,13 +174,11 @@ def addplayer(allplayers,playername,username):
     response = f'Added {playername} ({username}) as Player {len(allplayers)}.'
     return allplayers,response
 
-# rename this to something better
 def setupfiasco(allplayers):
     numplayers = len(allplayers)
     allrelationships = []
 
     if numplayers < 3:
-        #print("Not enough players.")
         return None,None
     else: 
         # set up relationships between players
@@ -207,7 +190,7 @@ def setupfiasco(allplayers):
     
 def displaydice(tabledice,whose=None,emoji=None):
     return displaydiceemoji(tabledice,whose,emoji) if emoji else displaydicenums(tabledice,whose) 
-    # also need to display stunt dice somehow
+    # also need to display stunt dice somehow someday
             
 def displaydiceemoji(tabledice,whose=None,emoji=None):
     typedict = {
@@ -230,7 +213,6 @@ def displaydiceemoji(tabledice,whose=None,emoji=None):
             emojistr = f'\t{dietype}: '
             for oneemoji in typedict[dietype]: emojistr = f'{emojistr}{oneemoji} '
             response = response + emojistr + '\n'
-        
 
     return response
 
@@ -261,11 +243,7 @@ def displaydicenums(tabledice,whose=None):
     return "\n".join(responselist)
             
 def movedie(dietype,dienum,giveto,getfrom,giveortake='took'):
-# add a bit to the str to say where they got the die from
-    if giveortake == 'took':
-        tofrom = 'from'
-    else:
-        tofrom = 'to'
+    tofrom = 'from' if giveortake == 'took' else 'to'
 
     if dietype and dienum:
         for die in getfrom:
@@ -299,10 +277,9 @@ def setrelationshipinfo(relationships,p1name,p2name,reltype,relstring):
 
         if (p1name == player1.playername.lower() and p2name == player2.playername.lower()) or (p1name == player2.playername.lower() and p2name == player1.playername.lower()):
 
-            reltype = rel.abbrs[reltype] if reltype in rel.abbrs else checkabbrs(reltype,rel.__dict__)
+            reltype = rel.abbrs[reltype] if reltype in rel.abbrs else checkabbrs(reltype,rel.__dict__.keys())
             
             if reltype in rel.__dict__:
-                
                 rel.__dict__[reltype] = relstring
                 resp = f'For {player1.playername} and {player2.playername}\'s relationship, {reltype} has been set to "{relstring}" \n'
                 return resp + rel.disprel()
@@ -359,17 +336,14 @@ def tilttie2(players,tietocheck):
 
 def displaytilt(elems):
     resp = '*All Tilt Elements:*'
-    for elem in elems:
-        resp += f'{elem.disp()}'
+    for elem in elems: resp += f'{elem.disp()}'
     return resp
 
-def parsediestring(diestring,pooldice):
-    pooldict = {}
 
-    for die in pooldice:
-        if die.dietype and die.dietype not in pooldict:
-            pooldict[die.dietype] = None
-    
+def parsediestring(diestring,pooldice):
+    poollist = {}
+    poollist = {die.dietype for die in pooldice if die.dietype}
+
     if len(diestring) == 1:
         try:
             dienum = int(diestring)
@@ -383,8 +357,8 @@ def parsediestring(diestring,pooldice):
     
     if dietype:
         dietype = dietype.lower()
-        dietype = checkabbrs(dietype,pooldict) # check to see if this type of die exists in a given pool
-    
+        dietype = checkabbrs(dietype,poollist) # check to see if this type of die exists in a given pool
+
     if dienum:
         try:
             dienum = int(dienum)
@@ -413,7 +387,7 @@ def loadtables(tablefile,whichtable):
    
     with open(fullpath, 'r', encoding='utf-8') as fin:
         filedata = json.load(fin)
-    #print(filedata)
+    
     t = filedata.get(whichtable)
     return t
 

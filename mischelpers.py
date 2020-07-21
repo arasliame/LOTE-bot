@@ -18,26 +18,21 @@ def checksuccess(roll):
     elif roll >= 10:
         return "Great success!","gs"
 
-def matchabbr(inp,abbrlist):
+def matchabbr2(inp,abbrlist):
     if inp:
         for item,abbrevs in abbrlist.items():
             if inp.lower() in abbrevs:
                 return item
     return inp 
 
-def newmatchabbr(inp,inputdict):
-    abbrs = list(filter(lambda x: x.startswith(inp),inputdict.keys()))
-    print(abbrs)
+def matchabbr(inp,inputlist):
+    abbrs = list(filter(lambda x: x.startswith(inp),inputlist))
 
     if not abbrs:
-        # print('no match found')
         return inp
     elif len(abbrs) > 1:
-        # more than one item found
-        # print('input was not specific enough')
         return inp
     else:
-        # Only one item found, so print that team.
         return abbrs[0]
 
 # check if bot has been passed a valid character
