@@ -1,0 +1,178 @@
+{
+    "tilt": {
+        "1": {
+            "category": "Mayhem",
+            "1": "An out of control rampage",
+            "2": "A frantic chase",
+            "3": "A dangerous animal (perhaps metaphorical) gets loose",
+            "4": "Magnificent self-destruction",
+            "5": "Cold-blooded score-settling",
+            "6": "Misdirected passion"
+        },
+        "2": {
+            "category": "Tragedy",
+            "1": "Death, out of the blue",
+            "2": "Somebody's life is changed forever, in a bad way",
+            "3": "Pain, followed by confusion",
+            "4": "Death, right on time",
+            "5": "Confusion, followed by pain",
+            "6": "Death, after an unpleasant struggle"
+        },
+        "3": {
+            "category": "Innocence",
+            "1": "Somebody is not so innocent after all",
+            "2": "A neighbor wanders into the situation",
+            "3": "The wrong guy gets busted",
+            "4": "Collateral damage",
+            "5": "Love rears its ugly head",
+            "6": "A well-meaning stranger intervenes"
+        },
+        "4": {
+            "category": "Guilt",
+            "1": "A visit from the (perhaps unofficial) authorities",
+            "2": "Betrayed by friends",
+            "3": "Somebody develops a conscience",
+            "4": "Greed leads to killing",
+            "5": "Someone panics",
+            "6": "A showdown"
+        },
+        "5": {
+            "category": "Paranoia",
+            "1": "A stranger arrives to settle a score",
+            "2": "What seems like dumb luck isn't - things are afoot",
+            "3": "Two people cross paths and everything changes",
+            "4": "A sudden reversal (of status, of fortune, of sympathy)",
+            "5": "The thing you stole has been stolen",
+            "6": "Somebody is watching, waiting for their moment"
+        },
+        "6": {
+            "category": "Failure",
+            "1": "A stupid plan, executed to perfection",
+            "2": "Something precious is on fire",
+            "3": "A tiny mistake leads to ruin",
+            "4": "A good plan comes unraveled",
+            "5": "You thought it was taken care of but it wasn't",
+            "6": "Fear leads to a fateful decision"
+        }
+    },
+    "softtilt": {
+        "1": {
+            "category": "Quotable",
+            "1": "\"This ends tonight\"",
+            "2": "\"You're too late\"",
+            "3": "\"I'm just not that into you\"",
+            "4": "\"I swear to God I have no idea what happened\"",
+            "5": "\"I love you\"",
+            "6": "\"We can fix this\""
+        },
+        "2": {
+            "category": "Violence",
+            "1": "A spectacular wreck",
+            "2": "Ill-considered vengeance",
+            "3": "An old-fashioned ass-kicking",
+            "4": "Impotent rage",
+            "5": "The showdown",
+            "6": "Something important (perhaps metaphorical) is demolished"
+        },
+        "3": {
+            "category": "Deception",
+            "1": "Misplaced trust",
+            "2": "Stabbed in the back - maybe literally",
+            "3": "The secret goes public",
+            "4": "A joke takes on a life of its own",
+            "5": "Framed, blamed, and shamed",
+            "6": "The mighty fall exceedingly hard"
+        },
+        "4": {
+            "category": "Truth",
+            "1": "An unwanted confession",
+            "2": "Dorky turns sexy",
+            "3": "A death in the family",
+            "4": "A lie becomes truth",
+            "5": "Truth becomes a lie",
+            "6": "The big reveal"
+        },
+        "5": {
+            "category": "Folly",
+            "1": "An unexpected proposal",
+            "2": "A simple mistake leads to complex pain",
+            "3": "A complex mistake leads to simple pain",
+            "4": "A single moment of miraculous luck",
+            "5": "Someone loses their nerve",
+            "6": "You can't afford to lose it, but you just did"
+        },
+        "6": {
+            "category": "Sex",
+            "1": "A magical moment in soft focus",
+            "2": "Somebody is pregnant",
+            "3": "True love is not nice",
+            "4": "Cue the hot stranger",
+            "5": "A surprising change of heart",
+            "6": "Chaos, indecency, and scandal"
+        }
+    },
+    "aftermath": {
+        "positive": {
+            "0": "**The worst thing in the universe.** This probably doesn't include death, since death would be way better than whatever this is. Be creative and don't settle for the first \"worst\" thing that comes to mind – there's something darker, more awful, more wretched in there somewhere.",
+            "1": "**Horrible.** You are probably dead. Other people, probably innocent people, are as well. There is no justice, there is no mercy, everything is utterly, painfully screwed and it is all – all of it – your fault.",
+            "2": "**Brutal.** Wounds that will never heal, for starters; stuff sawed off, blown off, or burned off on your way to grand, ignominious failure. Kiss whatever you care about goodbye. You may die, but you may not.",
+            "3": "**Harsh.** Shit-in-a-bag harsh, a-lifetime-of-medication harsh. A big black cloud of hurt is going to rain all over you. The things you need to happen are not going to, simple as that.",
+            "4": "**Savage.** Savage as in \"something is broken or mashed.\" Maybe you've got a permanent limp and a bad reputation. Plus, you totally fail.",
+            "5": "**Rough.** You are getting whipped like a rented mule, for starters, and you will remember this episode for all your diminished days. The lesson you learn will be profound, lingering, and painful.",
+            "6": "**Pathetic.** You'll suffer, oh dear God will you suffer, and everyone will know of your malfeasance, your stupidity, your lack of common sense and decency. You're probably going to be locked up, too.",
+            "7": "**Pathetic.** You'll suffer, oh dear God will you suffer, and everyone will know of your malfeasance, your stupidity, your lack of common sense and decency. You're probably going to be locked up, too.",
+            "8": "**Nothing to write home about.** Back to where you started. Maybe sore and broke, just like yesterday and tomorrow. You probably learned something though, like how to do it right next time. Next time...",
+            "9": "**Nothing to write home about.** Back to where you started. Maybe sore and broke, just like yesterday and tomorrow. You probably learned something though, like how to do it right next time. Next time...",
+            "10": "**Pretty good.** All things considered, you're coming out of this smelling like a rose. You're a little better off - maybe you got the girl, or maybe you just didn't get caught.",
+            "11": "**Pretty good.** All things considered, you're coming out of this smelling like a rose. You're a little better off - maybe you got the girl, or maybe you just didn't get caught.",
+            "12": "**Pretty good.** All things considered, you're coming out of this smelling like a rose. You're a little better off - maybe you got the girl, or maybe you just didn't get caught.",
+            "13": "**Awesome.** Insanely great. You will emerge not only unscathed, but if there's a girl involved, she's dropping her drawers. You might even get rich off this caper, who knows? Time for a new ride."
+        },
+        "negative": {
+            "0": "**The worst thing in the universe.** This probably doesn't include death, since death would be way better than whatever this is. Be creative and don't settle for the first \"worst\" thing that comes to mind – there's something darker, more awful, more wretched in there somewhere.",
+            "1": "**Dreadful.** You are certainly dead, probably from a self-inflicted wound. People you care about are also probably dead, maybe through your own stupid, ugly failure. To say that you fucked up is an insult to fucked-upedness. You have redefined the term.",
+            "2": "**Merciless.** You might not be dead on the outside but you sure as hell are dead on the inside. The emotional or mental wounds you have suffered will never heal. The future is a brick wall.",
+            "3": "**Grim.** The stress and trauma from your little adventure are going to haunt you forever - bits of your soul are destroyed and you are missing a piece or two. In a few years children are going to cry when you get too close. All your plans have ended in complete ruin.",
+            "4": "**Bitter.** You know what it's like to be utterly crushed, casually brought low, forced to eat your own words and stand mute and powerless before your enemies. They gloat, and you are helpless.",
+            "5": "**Miserable.** You are humiliated in a big, public way, and whatever reputation you once had is now in dirty pieces all around you. You'll never think of these days without a shudder of horror at your own aggressive stupidity.",
+            "6": "**Weak.** Hey, you're busted, beat, and broke down, but at least you've learned a lesson about human greed and frailty, right? It'll serve you well in prison, which is where you are probably headed.",
+            "7": "**Weak.** Hey, you're busted, beat, and broke down, but at least you've learned a lesson about human greed and frailty, right? It'll serve you well in prison, which is where you are probably headed.",
+            "8": "**Nothing to crow about.** Not better, but not way worse, either. Maybe the car is wrecked, or your wife is leaving you, or there's a court date. But compared to some of the other people you know...",
+            "9": "**Nothing to crow about.** Not better, but not way worse, either. Maybe the car is wrecked, or your wife is leaving you, or there's a court date. But compared to some of the other people you know...",
+            "10": "**Not too shabby.** You've made it out with dignity intact, through some fluke. There might even be a little profit, or self respect, or something. Time to throw a little party for all your friends.",
+            "11": "**Not too shabby.** You've made it out with dignity intact, through some fluke. There might even be a little profit, or self respect, or something. Time to throw a little party for all your friends.",
+            "12": "**Not too shabby.** You've made it out with dignity intact, through some fluke. There might even be a little profit, or self respect, or something. Time to throw a little party for all your friends.",
+            "13": "**Fan-fucking-tastic.** It's fat times ahead, safe and secure. That thing that would make your life better? Oh, you got it, absolutely, and then some. And then some more. Enjoy it!"
+        }
+    },
+    "softaftermath": {
+        "positive": {
+            "0": "**The worst thing in the universe.** Yes, technically it might be worse to be pulled apart by farm machinery, but in terms of your reputation, relationships, hopes and dreams, physical and mental health, and all you hold sacred and dear, nothing could possibly be worse. That thing you just thought of? Not bad enough. Try again, and phone your most sadistic, conniving friend for advice. Or you can get pulled apart by farm machinery.",
+            "1": "**Mystical.** The amount of failure this represents is a thing of legend, something that occurs once a decade maybe. Something discussed in hushed tones at gatherings. The best part is that you are to blame for all of it, every crumb of the fiery layer cake that is your self-destruction.",
+            "2": "**Fucked.** Whatever idiocy you got up to broke you — it scarred you, and I'm not talking about something a therapist can fix. And all around you are the broken pieces of the people and things you hold dear.",
+            "3": "**Extremely awful.** Whatever you care about is gone, that's for sure, and you're probably also missing a tooth.",
+            "4": "**Sorry-ass.** Your sad story is hardly worth commenting on. Plus you totally fail.",
+            "5": "**Inspirational.** As in \"Isn't it inspirational how that poor child managed to claw her way out of that hideous rat-hole of a life and isn't she just a little trooper?\"",
+            "6": "**Mortifying.** Someday the scandal will die down and everyone will forget your humiliation and defeat. Someday. Not today.",
+            "7": "**Encouraging.** Sure, you're no better off than you were, maybe things are actually worse, but there's hope — and that slender reed is something you can cling to.",
+            "8": "**Encouraging.** Sure, you're no better off than you were, maybe things are actually worse, but there's hope — and that slender reed is something you can cling to.",
+            "9": "**Sort of cool.** Unexpected, sure, but in the end you're doing OK. Nothing too badly broken, maybe some interesting prospects, lessons learned and a good friend or two to keep you on the right track.",
+            "10": "**Sort of cool.** Unexpected, sure, but in the end you're doing OK. Nothing too badly broken, maybe some interesting prospects, lessons learned and a good friend or two to keep you on the right track.",
+            "11": "**Mystical.** There's a photo of you in the dictionary next to the entry for \"lucky bastard.\" You have it all—success, an excellent reputation, love, friends, security, you name it. All that and probably a jet-ski, too."
+        },
+        "negative": {
+            "0": "**The worst thing in the universe.** Yes, technically it might be worse to be pulled apart by farm machinery, but in terms of your reputation, relationships, hopes and dreams, physical and mental health, and all you hold sacred and dear, nothing could possibly be worse. That thing you just thought of? Not bad enough. Try again, and phone your most sadistic, conniving friend for advice. Or you can get pulled apart by farm machinery.",
+            "1": "**Astonishing.** People didn't think it was even possible to be as reviled as you are, but you proved them wrong. You'll wear the world's contempt for the rest of your life. Are you in jail, protective custody, or a disguise? Probably. Is your life — and the lives of those you care most about — completely ruined? Definitely.",
+            "2": "**Degrading.** You are the poster child for humiliation and disgrace. Nobody loves you; nobody even likes you. Your reputation, such as it is, precedes you, and you are a broken person. How could you do what you did?",
+            "3": "**Shameful.** You are the toast of the town, if by toast you mean laughing stock and by town you mean entire fucking world.",
+            "4": "**Wretched.** Sure, you fail, but everybody fails. You fail like a complete tool and it's pitiful.",
+            "5": "**Desperate.** Still looking for an angle, still rearranging the deck chairs, stuck in a holding pattern getting nowhere.",
+            "6": "**Sad.** Woeful. Not cool. People don't like you — even you don't like you. You reached your peak and it wasn't all that lofty, was it?",
+            "7": "**Promising.** To you, anyway — there's light at the end of the tunnel if you can just soldier on through the grind. You may be worse for the wear, but next time will be totally different.",
+            "8": "**Promising.** To you, anyway — there's light at the end of the tunnel if you can just soldier on through the grind. You may be worse for the wear, but next time will be totally different.",
+            "9": "**Happy.** Given the possibilities, things didn't turn out half bad. Your future isn't in flames, your dignity is intact, and maybe you learned something. It's all pretty cheerful, considering the alternative. Life's weird sometimes.",
+            "10": "**Happy.** Given the possibilities, things didn't turn out half bad. Your future isn't in flames, your dignity is intact, and maybe you learned something. It's all pretty cheerful, considering the alternative. Life's weird sometimes.",
+            "11": "**Astonishing.** You are transformed by luck, grace, and your own innate coolness. If there's romance afoot, you are sealing the deal. If there's something you wanted, you are totally going to get it!"
+        }
+    }
+}
