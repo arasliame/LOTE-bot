@@ -25,6 +25,21 @@ def matchabbr(inp,abbrlist):
                 return item
     return inp 
 
+def newmatchabbr(inp,inputdict):
+    abbrs = list(filter(lambda x: x.startswith(inp),inputdict.keys()))
+    print(abbrs)
+
+    if not abbrs:
+        # print('no match found')
+        return inp
+    elif len(abbrs) > 1:
+        # more than one item found
+        # print('input was not specific enough')
+        return inp
+    else:
+        # Only one item found, so print that team.
+        return abbrs[0]
+
 # check if bot has been passed a valid character
 def botgetcharinfo(ctx,character,chardata):
     

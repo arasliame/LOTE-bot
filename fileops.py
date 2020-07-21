@@ -35,6 +35,9 @@ def loadvarsfromfiles(characterfile,movefile):
 
     return chardata,movedata,charabbrs,allstats,statabbrs,moveabbrs
 
+
+
+# could convert this to use the filter function https://stackoverflow.com/questions/20972367/python-autocomplete-user-input
 def loadabbrs(allvars):
     finaldict = dict()
 
