@@ -1,5 +1,10 @@
 import random
+import os
+import json
+from shutil import copyfile
+from datetime import datetime
 import logging
+
 
 # roll plus a modifier
 def rollmod(mod=0):
@@ -18,26 +23,48 @@ def checksuccess(roll):
     elif roll >= 10:
         return "Great success!","gs"
 
-def matchabbr2(inp,abbrlist):
-    if inp:
-        for item,abbrevs in abbrlist.items():
-            if inp.lower() in abbrevs:
-                return item
-    return inp 
-
 def matchabbr(inp,inputlist):
-    abbrs = list(filter(lambda x: x.startswith(inp),inputlist))
+    firstletters = {}
+    nospaces = {}
 
-    if not abbrs:
+# check for abbreviations
+    for item in inputlist:
+        words = item.split()
+        letters = [word[0] for word in words]
+        firstletters["".join(letters)] = item
+        nospaces[item.replace(" ","")] = item
+    
+    if inp in firstletters:
+        inp = firstletters[inp]    
+
+    abbrs = list(filter(lambda x: inp in x,inputlist))
+    abbrs2 = list(filter(lambda x: inp in x,nospaces.keys()))
+
+    if not abbrs and not abbrs2:
         return inp
-    elif len(abbrs) > 1:
+    elif len(abbrs) > 1 or len(abbrs2) > 1:
         return inp
     else:
-        return abbrs[0]
+        if abbrs:
+            return abbrs[0]
+        elif abbrs2:
+            return nospaces.get(abbrs2[0])
+
+def checkvalidstat(stat):
+    try:
+        return None if abs(int(stat)) > 3 else int(stat)
+    except ValueError or TypeError:
+        return None
+
+# make a temporary dict for custom character moves
+def addcharmoves(charinfo,movedata):
+    cmovedata = charinfo["custom moves"].copy()
+    cmovedata.update(movedata)
+    
+    return cmovedata
 
 # check if bot has been passed a valid character
 def botgetcharinfo(ctx,character,chardata):
-    
     response = None
 
     if character == "user":
@@ -88,7 +115,6 @@ def botcharmove(ctx,moveinfo,charinfo):
 
 # roll for bot when a numeric modifier is passed
 def botrollint(ctx,mod,info):
-    
     roll = rollmod(mod)
     modsign = '+' if mod >= 0 else ''
     mod = f'{modsign}{mod}'
@@ -98,8 +124,7 @@ def botrollint(ctx,mod,info):
     return response
 
 # roll for bot when passed stat is a string
-def botrollstring(ctx,stat,info):
-            
+def botrollstring(ctx,stat,info):  
     roll = rollmod(info.get("stats").get(stat))
     stat = f'{stat.title()}!'
 
@@ -122,3 +147,48 @@ def responsestr(ctx,charinfo,mod,roll,moveinfo=None):
     
     return response
 
+
+
+
+def loaddata(filename):
+    directory = os.path.dirname(__file__)
+    fullpath = os.path.abspath(os.path.join(directory, filename))
+   
+    with open(fullpath, 'r', encoding='utf-8') as fin:
+        filedata = json.load(fin)
+    return filedata
+
+
+def loadvarsfromfiles(characterfile,movefile):
+    # load info from files
+    chardata = loaddata(characterfile)
+    movedata = loaddata(movefile)
+
+    # get all stats from the first character
+    allstats = tuple(chardata.get(list(chardata.keys())[0]).get("stats").keys())
+
+    logging.info(f"{characterfile} and {movefile} loaded for session.")
+
+    return chardata,movedata,allstats
+
+
+
+
+# saves whatever is in the chardata dict into json file, doesn't reload any of the other variables
+def savechardata(chardata,characterfile):
+    directory = os.path.dirname(__file__)
+    fullpath = os.path.abspath(os.path.join(directory, characterfile))
+   
+    now = datetime.now().strftime("%Y%m%d-%H%M%S-")
+    newfilename = now + characterfile
+
+    newfullpath = os.path.abspath(os.path.join(directory,'backup', newfilename))
+
+    copyfile(fullpath,newfullpath)
+
+    with open(characterfile, 'w', encoding='utf-8') as fout:
+        json.dump(chardata,fout,indent=4) 
+    
+    logging.warning(f"Saved over existing character data. Backup character data saved at {newfullpath}.")
+
+    return f"Save successful!"

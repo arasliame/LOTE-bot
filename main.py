@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from discord.ext import commands
 import logging
+from lotehelpers import matchabbr
 
 '''
 directory = os.path.dirname(__file__)
@@ -29,9 +30,12 @@ async def on_ready():
     bot.load_extension('lotebotclass')
     bot.load_extension('fiascobotclass')
      # add command to toggle game?
-
-#@bot.commands(name='setgame', help='Play LOTE or Fiasco.')
-
+'''
+@bot.commands(name='setgame', help='Play Legend of the Elements or Fiasco.')
+async def setgame(ctx,game='both'):
+    game = matchabbr(game,['both','lote','legendofthelements'])
+    if game == 'lote'
+'''
 if __name__ == "__main__":
     bot.run(TOKEN)
     

@@ -1,6 +1,5 @@
 from discord.ext import commands
-from fileops import loadvarsfromfiles,addcharmoves,savechardata
-from mischelpers import matchabbr,botgetcharinfo,botcharmove,botrollint,botrollstring
+from lotehelpers import *
 
 def setup(bot):
     characterfile = 'characters.json'
@@ -13,12 +12,11 @@ class LOTE(commands.Cog):
         self.bot = bot
         self.characterfile = characterfile
         self.movefile = movefile
-        self.chardata,self.movedata,self.charabbrs,self.allstats,self.statabbrs,self.moveabbrs = loadvarsfromfiles(characterfile,movefile)
-        #self.charnames = [char.get("character name") for char in self.chardata]
+        self.chardata,self.movedata,self.allstats = loadvarsfromfiles(characterfile,movefile)
         
 
     # roll based on character sheet or roll with a modifier depending on user input
-    @commands.command(name='r', help='Roll 2d6 plus a stat or numeric modifier. By default, use the character your Discord user is associated with, or specify a specific character.')
+    @commands.command(name='r', help='Roll 2d6 plus a stat or numeric modifier.',description='Roll 2d6 plus a stat or numeric modifier. By default, use the character your Discord user is associated with, or specify a specific character.\n Usage: .r [number or name of stat] [*character]')
     async def botroll(self, ctx, stat='0', character="user"):
         
         character = matchabbr(character,self.chardata)
@@ -38,7 +36,7 @@ class LOTE(commands.Cog):
                     response = botrollstring(ctx,stat,charinfo)
             await ctx.send(response)
 
-    @commands.command(name='m', help='Do a specific move. By default, use the character your Discord user is associated with, or specify a character to roll for.')
+    @commands.command(name='m', help='Do a specific move.',description='By default, use the character your Discord user is associated with, or specify a character to roll for.\n Usage: .m [name of move or abbreviation] [*character]')
     async def rollformove(self,ctx,move=None,character="user"):
         character = matchabbr(character,self.chardata)
         charinfo,response = botgetcharinfo(ctx,character,self.chardata)    
@@ -48,7 +46,8 @@ class LOTE(commands.Cog):
 
         # find moves that are specific to a character
         cmovedata = addcharmoves(charinfo,self.movedata)
-        move = matchabbr(move,cmovedata)
+        if move:
+            move = matchabbr(move,cmovedata)
 
         if move not in cmovedata:
             response = f'{ctx.message.author.mention}: Invalid move, try again.'
@@ -58,10 +57,11 @@ class LOTE(commands.Cog):
                 
         await ctx.send(response)
 
-    @commands.command(name='list', help='List all moves, characters, or individual stats. Type m to see moves, and c to see characters.')
+    @commands.command(name='list', help='List all moves, characters, or individual character stats.',description='Type m to see moves, c to see characters, or a character\'s name to see their stats.')
     async def liststuff(self,ctx,listtype='m'):
         
         responselist = [f'{ctx.message.author.mention}:']
+        listtype = matchabbr(listtype,['moves','characters'])
 
         if listtype in ['m','move','moves']:
             responselist.extend(self.listmovedata())
@@ -122,7 +122,7 @@ class LOTE(commands.Cog):
                 )
         return responselist
 
-    @commands.command(name='update', help='Update a value inside a character\'s sheet. This can be overwritten unless saved using the save command.')
+    @commands.command(name='update', help='Update a value on a character\'s sheet.',description='Update a value on a character\'s sheet. This can be overwritten unless saved using the save command. \n Usage: .set fluid 3 katara')
     async def outputlist(self,ctx,key=None,newval=None,character='user'):
         if not newval or not key:
             response = f'{ctx.message.author.mention}: Invalid input, try again. Example syntax: .set fluid 3 katara.'
@@ -143,7 +143,7 @@ class LOTE(commands.Cog):
             else:
                 stat = matchabbr(key,self.allstats)
                 if stat in self.allstats:
-                    newstat = self.checkvalidstat(newval)
+                    newstat = checkvalidstat(newval)
                     if not newstat:
                         response = f'{ctx.message.author.mention}: Invalid input, try again. Stats can only be set to a maximum of +3.'
                     elif charinfo['stats'][stat] != newstat:
@@ -156,14 +156,8 @@ class LOTE(commands.Cog):
 
         await ctx.send(response)
 
-    def checkvalidstat(self,stat):
-        try:
-            return None if abs(int(stat)) > 3 else int(stat)
-        except ValueError or TypeError:
-            return None
 
-
-    @commands.command(name='save', help='Save all current character stats so they are not overrwritten on bot restart.')
+    @commands.command(name='save', help='Save all current character stats to file',description='Stats will be overrwritten on bot restart, unless saved using this command.')
     async def savetofile(self, ctx):
 
         response = f'{ctx.message.author.mention}: ' + savechardata(self.chardata,self.characterfile)

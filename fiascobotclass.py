@@ -1,4 +1,4 @@
-from fiascoclasses import *
+from fiascohelpers import *
 from discord.ext import commands
 
 def setup(bot):
@@ -12,22 +12,38 @@ class fiasco(commands.Cog):
         self.diceemoji = [':sparkling_heart:',':gun:'] # first position is emoji to display for positive, second is for negative
         self.curphase = 'no game' 
         self.tiltelements = []
+        self.tablefile = 'fiascotables.json'
+        self.phaseorder = phaseorder = ['no game','setup','act one','tilt','act two','aftermath','reset fiasco']
 
     def phasecheck(self,checkphase):
-        phaseorder = ['no game','setup','actone','tilt','acttwo','aftermath','reset']
         
-        curindex = phaseorder.index(self.curphase)
-        nextindex = (curindex + 1) % len(phaseorder)
+        curindex = self.phaseorder.index(self.curphase)
+        nextindex = curindex + 1
 
-        return self.curphase if checkphase != phaseorder[nextindex] else checkphase
+        if checkphase != self.phaseorder[nextindex]:
+            return f"Invalid phase selection. You're currently in {self.curphase.title()}, so your next phase should be {self.phaseorder[nextindex].title()}."
+        else:
+            return None
 
-    @commands.command(name='addplayer',help='Add a player to Fiasco. Specify the player''s name.')
+    @commands.command(name='nextphase',help='Go to the next phase in Fiasco',description='Go to the next phase in Fiasco. Phase order: No Game > Setup > Act One > Tilt > Act Two > Aftermath')
+    async def botnextphase(self, ctx):
+        curindex = self.phaseorder.index(self.curphase)
+        nextphase = self.phaseorder[curindex + 1].replace(" ","")
+        
+        cmd = ctx.bot.get_command(nextphase)
+        
+        if cmd:
+            await ctx.invoke(cmd)
+        
+
+            
+
+    @commands.command(name='addplayer',help='Add a player to Fiasco',description='Add a new player to a Fiasco game. \nExample usage: \n\t(.addplayer [player\'s name] [*Discord username] *optional)\n\t.addplayer Sara \n\t.addplayer Joe joesusername#1111')
     async def botaddfiascoplayer(self, ctx, playername=None, username=None):
-        self.curphase = self.phasecheck('no game')
         if self.curphase != 'no game':
             response = 'Game in progress, invalid input. To add new players, you must reset the game and start over.'
-
         else: 
+            self.curphase = 'no game'
             username = ctx.message.author if not username else username
                 
             if not playername:
@@ -39,23 +55,24 @@ class fiasco(commands.Cog):
 
         await ctx.send(response)
 
-    @commands.command(name='setup',help='Set up a game of Fiasco with the current player list.')
+    @commands.command(name='setup',help='Setup phase of Fiasco',hidden=True)
     async def botsetupfiasco(self,ctx):
         responselist = [f'{ctx.message.author.mention}: ']
-        self.curphase = self.phasecheck('setup')
-        if self.curphase != 'setup':
-            responselist.append('Game in progress, invalid input. To restart setup, you must reset the game and start over.')
-        
-        else:
-            self.allrelationships,self.tabledice = setupfiasco(self.allplayers)            
 
-            if not self.allrelationships:
-                responselist.append('Not enough players. Add more players and try again.')
+        self.allrelationships,self.tabledice = setupfiasco(self.allplayers)            
+
+        if not self.allrelationships:
+            responselist.append('Not enough players. Add more players and try again.')
+        else:
+            resp = self.phasecheck('setup')
+            
+            if resp:
+                responselist.append(resp)
             else:
+                self.curphase = 'setup'
                 playerlist = []
                 for player in self.allplayers:
                     playerlist.append(player.playername)
-                self.curphase = 'setup'
                 responselist.append('*Game started with players ' + ', '.join(playerlist)+'*')
                 responselist.append('Begin the Setup!') # maybe add some rules explanation here
                 responselist.append(displaydice(self.tabledice))
@@ -63,8 +80,8 @@ class fiasco(commands.Cog):
         response = "\n".join(responselist)
         await ctx.send(response)
 
-    @commands.command(name='test',help='Set up a game of Fiasco with the current player list.')
-    async def bottest(self,ctx,stage=None):
+    @commands.command(name='test',help='Command used in testing',hidden=True)
+    async def botaddtestchars(self,ctx,stage=None):
         username = ctx.message.author
         self.allplayers,response = addplayer(self.allplayers,'Sara',username)
         self.allplayers,response = addplayer(self.allplayers,'Karl','joe123')
@@ -73,7 +90,7 @@ class fiasco(commands.Cog):
         await ctx.send('Test setup characters complete')
 
         if stage in ['t','a']:
-            self.curphase = 'actone'
+            self.curphase = 'act one'
             self.allrelationships,self.tabledice = setupfiasco(self.allplayers) # setup
 
             for rel in self.allrelationships: # fill relationships
@@ -96,7 +113,7 @@ class fiasco(commands.Cog):
             await ctx.send("Finished taking dice in act one")
 
         if stage in ['a']:
-            self.curphase = 'acttwo'
+            self.curphase = 'act two'
 
             for player in self.allplayers:                
                 resp,player.dice,self.tabledice = movedie('positive',None,player.dice,self.tabledice)
@@ -122,11 +139,11 @@ class fiasco(commands.Cog):
         return None if len(curplayer) != 1 else curplayer[0]
         
 
-    @commands.command(name='take',help='Take a die from the pool or from a player.')
-    async def bottakedie(self,ctx,diestring=None,takefrom='pool',taking=None):
+    @commands.command(name='take',help='Take a die',description='Take a die from a player or from the regular pool. Defaults to taking from the pool. \nExample usage:\n\t(.take [die] [*takefrom] [*taking]) *optional\n\t.take 6\n\t.take pos pool Sara\n\t .take pos Joe Sara')
+    async def bottakeadie(self,ctx,diestring=None,takefrom='pool',taking=None):
         
         responselist = [f'{ctx.message.author.mention}: ']
-        showemoji = self.diceemoji if self.curphase in ['actone','acttwo'] else None
+        showemoji = self.diceemoji if self.curphase in ['act one','act two'] else None
         if self.curphase in ['tilt']:
             responselist.append('Cannot give or take dice during the Tilt.')
         else:
@@ -166,7 +183,49 @@ class fiasco(commands.Cog):
         await ctx.send(response)
 
 
-    @commands.command(name='set',help='Set a relationship or tilt element.')
+    @commands.command(name='give',help='Give a die',description='Give a die. Defaults to giving to the pool. \nExample usage:\n\t(.give [die] [*giveto] [*giving]) *optional\n\t.give 6\n\t.give pos Joe Sara\n\t .give neg Sara')
+    async def botgivedie(self,ctx,diestring,giveto='pool',getfrom=None):
+        # arguments: .give [die] to [person to giveto] as [person to get from]
+        responselist = [f'{ctx.message.author.mention}: ']
+        showemoji = self.diceemoji if self.curphase in ['act one','act two'] else None
+        if self.curphase in ['tilt']:
+            responselist.append('Cannot give or take dice during the Tilt.')
+        else:
+            username = ctx.message.author
+            getfromplayer = self.matchuser(getfrom,username)
+
+            if not getfromplayer:
+                responselist.append('Invalid player to get dice from, try again.')
+            else:
+
+                dietype,dienum = parsediestring(diestring,getfromplayer.dice)
+
+                if giveto == 'pool': # return dice to the table
+                    resp,self.tabledice,getfromplayer.dice = movedie(dietype,dienum,self.tabledice,getfromplayer.dice,"gave")
+                    if resp:
+                        responselist.append(f'{getfromplayer.playername} {resp} the pool.')
+                        responselist.append(getfromplayer.dispdice(showemoji))
+                        responselist.append(displaydice(self.tabledice,None,showemoji))
+                    else:
+                        responselist.append("Invalid die selection, try again.")
+                else:
+                    givetoplayer = self.matchuser(None,username) if giveto in ['me','mine'] else self.matchuser(giveto,None)
+
+                    if givetoplayer:
+                        resp,givetoplayer.dice,getfromplayer.dice = movedie(dietype,dienum,givetoplayer.dice,getfromplayer.dice,"gave")
+                        if resp:
+                            responselist.append(f'{getfromplayer.playername} {resp} {givetoplayer.playername}.')
+                            responselist.append(getfromplayer.dispdice(showemoji))
+                            responselist.append(givetoplayer.dispdice(showemoji))
+                        else:
+                            responselist.append("Invalid die selection, try again.")
+                    else:
+                        responselist.append("Invalid player to give dice to, try again.")
+
+        response = "\n".join(responselist)
+        await ctx.send(response)
+
+    @commands.command(name='set',help='Set a relationship or tilt element')
     async def botsetelement(self,ctx,p1=None,p2=None,reltype=None,relstring=None):
         responselist = [f'{ctx.message.author.mention}: ']
 
@@ -185,7 +244,7 @@ class fiasco(commands.Cog):
                 responselist.append(displaytilt(self.tiltelements))
             else:         
                 # allow selection of soft tilt table
-                t = loadtables("fiascotables.json","softtilt") if reltype == 'soft' else loadtables("fiascotables.json","tilt")
+                t = loadtables(self.tablefile,"softtilt") if reltype == 'soft' else loadtables(self.tablefile,"tilt")
                 elems = t.get(p1)
 
                 if elems:
@@ -208,7 +267,7 @@ class fiasco(commands.Cog):
         await ctx.send(response)
 
 
-    @commands.command(name='show',help='Display things, like relationships and tilt elements and dice.')
+    @commands.command(name='show',help='Display relationships, tilt elements, and/or dice.', description='Usage ([argument] [*optional]): \n\tShow all: .show all \n\tShow relationships: .show rel [*player] \n\t Show Tilt elements: .show tilt \n\t Show dice: .show dice [*player or pool]')
     async def botshow(self,ctx,showwhat='all',playername=None,username='all'): # player is a toggle to see only one player or user's relationships
         responselist = [f'{ctx.message.author.mention}: ']
         
@@ -220,7 +279,7 @@ class fiasco(commands.Cog):
                 username = ctx.message.author
                 playername = None
 
-            showemoji = self.diceemoji if self.curphase in ['actone','acttwo'] else None
+            showemoji = self.diceemoji if self.curphase in ['act one','act two'] else None
             player = self.matchuser(playername,username)
 
             if player:
@@ -259,51 +318,26 @@ class fiasco(commands.Cog):
             if self.tiltelements:
                 responselist.append(displaytilt(self.tiltelements))
             else:
-                responselist.append('*No Tilt elements to display.*')
+                responselist.append('*No Tilt elements to display.* Use .show tilttable to see the Tilt table.')
+
+        if showwhat =='tilttable':
+            # show the soft tilt table instead
+            
+            t = loadtables(self.tablefile,'softtilt') if playername == 'soft' else loadtables(self.tablefile,'tilt')
+            resp = '*Tilt Table:* ```'
+            for num in t:
+                resp += f'{num}: {t.get(num).get("category").upper()}'
+                for x in range(1,7):
+                    resp += f'\n\t{x}: {t.get(num).get(str(x))}'
+                resp += '\n'
+            resp += '```'
+            responselist.append(resp)
 
         response = "\n".join(responselist)
         await ctx.send(response)
     
-    @commands.command(name='give',help='Give a die to another player or back to the pool')
-    async def botgivedie(self,ctx,diestring,giveto='pool',getfrom=None):
-        # arguments: .give [die] to [person to giveto] as [person to get from]
-        responselist = [f'{ctx.message.author.mention}: ']
-        showemoji = self.diceemoji if self.curphase in ['actone','acttwo'] else None
-        username = ctx.message.author
-        getfromplayer = self.matchuser(getfrom,username)
 
-        if not getfromplayer:
-            responselist.append('Invalid player to get dice from, try again.')
-        else:
-
-            dietype,dienum = parsediestring(diestring,getfromplayer.dice)
-
-            if giveto == 'pool': # return dice to the table
-                resp,self.tabledice,getfromplayer.dice = movedie(dietype,dienum,self.tabledice,getfromplayer.dice,"gave")
-                if resp:
-                    responselist.append(f'{getfromplayer.playername} {resp} the pool.')
-                    responselist.append(getfromplayer.dispdice(showemoji))
-                    responselist.append(displaydice(self.tabledice,None,showemoji))
-                else:
-                    responselist.append("Invalid die selection, try again.")
-            else:
-                givetoplayer = self.matchuser(None,username) if giveto in ['me','mine'] else self.matchuser(giveto,None)
-
-                if givetoplayer:
-                    resp,givetoplayer.dice,getfromplayer.dice = movedie(dietype,dienum,givetoplayer.dice,getfromplayer.dice,"gave")
-                    if resp:
-                        responselist.append(f'{getfromplayer.playername} {resp} {givetoplayer.playername}.')
-                        responselist.append(getfromplayer.dispdice(showemoji))
-                        responselist.append(givetoplayer.dispdice(showemoji))
-                    else:
-                        responselist.append("Invalid die selection, try again.")
-                else:
-                    responselist.append("Invalid player to give dice to, try again.")
-
-        response = "\n".join(responselist)
-        await ctx.send(response)
-
-    @commands.command(name='resetfiasco',help='Completely reset your game of Fiasco.')
+    @commands.command(name='resetfiasco',help='Reset your game')
     async def botresetfiasco(self,ctx):
         self.curphase = 'no game'
         self.allplayers = []
@@ -313,31 +347,30 @@ class fiasco(commands.Cog):
         await ctx.send(f'{ctx.message.author.mention}: Fiasco game has been completely reset. Add players to start a new game.')
 
     # add stunt die handling to this someday
-    @commands.command(name='actone',help='Act One of Fiasco')
+    @commands.command(name='actone',help='Act One of Fiasco',hidden=True)
     async def botactone(self,ctx):      
         responselist = [f'{ctx.message.author.mention}: ']
-        self.curphase = self.phasecheck('actone')
-        if self.curphase != 'actone':
-            responselist.append('Invalid phase, Act One can only be started after Setup. To restart Act One, you must reset the game and start over.')
+        # check to make sure that all relationships are full
+        missing = []
+        for rel in self.allrelationships:
+            resp = checkfullrelationship(rel)
+            if resp:
+                missing.append(resp)
+                missing.append(rel.disprel())
+        if missing:
+            responselist.append('Cannot start Act One, the following relationships are incomplete: \n')
+            responselist.append("\n".join(missing))
         else:
-
-            # check to make sure that all relationships are full
-            missing = []
-            for rel in self.allrelationships:
-                resp = checkfullrelationship(rel)
-                if resp:
-                    missing.append(resp)
-                    missing.append(rel.disprel())
-            if missing:
-                responselist.append('Cannot start act one, the following relationships are incomplete: \n')
-                responselist.append("\n".join(missing))
-
+            resp = self.phasecheck('act one')
+            
+            if resp:
+                responselist.append(resp)
             else:
-                self.curphase = 'actone'
+                self.curphase = 'act one'
                 for player in self.allplayers:
                     player.dice = []
                 responselist.append('*Beginning Act One*')
-                responselist.append('Take turns. When it is your turn, your character gets a scene. When only half the dice remain in the central pile, Act One ends.')
+                responselist.append('Take turns. When it is your turn, your character gets a scene. When only half the dice remain in the central pile, Act One ends.\n')
                 
                 self.tabledice = rollactone(len(self.allplayers))
                 responselist.append(displaydice(self.tabledice,None,self.diceemoji))
@@ -345,7 +378,7 @@ class fiasco(commands.Cog):
         response = "\n".join(responselist)
         await ctx.send(response)
 
-    @commands.command(name='fill',help='fill relationships for testing')
+    @commands.command(name='fill',help='fill relationships for testing',hidden=True)
     async def botfill(self,ctx,all=None):
         for rel in self.allrelationships:
             rel.parentcategory = 'Friends'
@@ -385,20 +418,21 @@ class fiasco(commands.Cog):
 
         return responselist,winners[0],winners[1]
 
-    @commands.command(name='tilt',help='Tilt phase of Fiasco')
+    @commands.command(name='tilt',help='Tilt phase of Fiasco',hidden=True)
     async def bottilt(self,ctx):
         responselist = [f'{ctx.message.author.mention}: ']
         
-        self.curphase = self.phasecheck('tilt')
-        if self.curphase != 'tilt':
-            responselist.append('Invalid phase, Tilt can only be started after Act One. To restart Tilt, you must reset the game and start over.')
+        # check to make sure the right number of dice are in the pool
+        numplayers = len(self.allplayers)
+        if len(self.tabledice) != numplayers * 2:
+            responselist.append(f'Incorrect number of dice in pool. To start the tilt, you should have {numplayers * 2} dice left, so you need to take {len(self.tabledice) - (numplayers * 2)} dice from the pool.')
         else:
-
-            # check to make sure the right number of dice are in the pool
-            numplayers = len(self.allplayers)
-            if len(self.tabledice) != numplayers * 2:
-                responselist.append(f'Incorrect number of dice in pool. To start the tilt, you should have {numplayers * 2} dice left.')
+            resp = self.phasecheck('tilt')
+            
+            if resp:
+                responselist.append(resp)
             else:
+                self.curphase = 'tilt'
                 allvals = dict()
                 for player in self.allplayers:
                     resp = player.calcscore("tilt")
@@ -429,27 +463,29 @@ class fiasco(commands.Cog):
         response = "\n".join(responselist)
         await ctx.send(response)
 
-    @commands.command(name='acttwo',help='Act Two of Fiasco')
+    @commands.command(name='acttwo',help='Act Two of Fiasco',hidden=True)
     async def botacttwo(self,ctx):
         responselist = [f'{ctx.message.author.mention}: ']
         
-        self.curphase = self.phasecheck('acttwo')
-        if self.curphase != 'acttwo':
-            responselist.append('Invalid phase, Act Two can only be started after Tilt. To restart Act Two, you must reset the game and start over.')
-        elif len(self.tiltelements) != 2:
+        if len(self.tiltelements) != 2:
             responselist.append('Before starting Act Two, you must have 2 Tilt elements. Use the ".set" command to add Tilt elements.')
         else:
-            # add thing here - don't start unless tilt elements are full
-            responselist.append('*Beginning Act Two*')
-            responselist.append('Same as Act One! Take turns, when it\'s your turn, your character gets a scene. This time, the final die is wild! \n')
+            resp = self.phasecheck('act two')
             
-            responselist.append(displaydice(self.tabledice,None,self.diceemoji))
-            responselist.append(f'{displaytilt(self.tiltelements)}')
+            if resp:
+                responselist.append(resp)
+            else:
+                self.curphase = 'act two'
+                responselist.append('*Beginning Act Two*')
+                responselist.append('Same as Act One! Take turns, when it\'s your turn, your character gets a scene. This time, the final die is wild! \n')
+                
+                responselist.append(displaydice(self.tabledice,None,self.diceemoji))
+                responselist.append(f'{displaytilt(self.tiltelements)}')
 
         response = "\n".join(responselist)
         await ctx.send(response)
     
-    @commands.command(name='aftermath',help='Aftermath phase of Fiasco')
+    @commands.command(name='aftermath',help='Aftermath phase of Fiasco',hidden=True)
     async def botaftermath(self,ctx,soft=None):
         responselist = [f'{ctx.message.author.mention}: ']
 
@@ -457,23 +493,29 @@ class fiasco(commands.Cog):
         if self.tabledice != []:
             responselist.append('You cannot start the Aftermath while there are still dice left in the table pool. Allocate all dice before trying again.')
         else:
-            self.curphase = self.phasecheck('aftermath')
-            if self.curphase != 'aftermath':
-                responselist.append('Invalid phase, Aftermath can only be started after Act Two.')
+            resp = self.phasecheck('aftermath')
+            
+            if resp:
+                responselist.append(resp)
             else:
+                self.curphase = 'aftermath'
                 for player in self.allplayers:
                     resp = player.calcscore("aftermath")
                     responselist.append(f'*{player.playername}\'s Aftermath Calculation:*')
                     responselist.append(resp)
-
-                    atype = "softaftermath" if soft == 'soft' else "aftermath"
-                    t = loadtables("fiascotables.json",atype)
+                    
+                    if soft == 'soft':
+                        atype = "softaftermath" 
+                        maxval = 11
+                    else:
+                        atype = "aftermath"
+                        maxval = 13
+                    
+                    t = loadtables(self.tablefile,atype)
 
                     paftermath = t.get(player.scores["aftermath"]["totalsign"])
-                    if player.scores["aftermath"]["totalval"] > 13 and not soft:
-                        player.scores["aftermath"]["totalval"] = 13 
-                    if player.scores["aftermath"]["totalval"] > 11 and soft == 'soft':
-                        player.scores["aftermath"]["totalval"] = 11 
+                    if player.scores["aftermath"]["totalval"] > maxval:
+                        player.scores["aftermath"]["totalval"] = maxval 
 
                     paftermath = paftermath.get(str(player.scores["aftermath"]["totalval"])) if paftermath else t.get('positive').get('0')
 

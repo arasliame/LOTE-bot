@@ -135,6 +135,8 @@ def checkabbrs(inp,inputlist):
         return abbrs[0]
 
 
+
+
 class fiascodie():
     def __init__(self,dietype=None):
         self.dienum = random.randint(1,6)
@@ -206,7 +208,7 @@ def displaydiceemoji(tabledice,whose=None,emoji=None):
         else:
             typedict["No type"].append(die.dienum)
     
-    response = f"```{whose}'s Dice Pool:```" if whose else "```Table Dice Pool:```"
+    response = f"```{whose}'s Dice Pool:```" if whose else f"```Table Dice Pool ({len(tabledice)}):```"
     
     for dietype in typedict:
         if typedict[dietype]:
