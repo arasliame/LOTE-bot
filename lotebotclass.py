@@ -16,7 +16,7 @@ class LOTE(commands.Cog):
         
 
     # roll based on character sheet or roll with a modifier depending on user input
-    @commands.command(name='r', help='Roll 2d6 plus a stat or numeric modifier.',description='Roll 2d6 plus a stat or numeric modifier. By default, use the character your Discord user is associated with, or specify a specific character.\n Usage: .r [number or name of stat] [*character]')
+    @commands.command(name='r', help='Roll 2d6 plus a stat or numeric modifier',description='Roll 2d6 plus a stat or numeric modifier. By default, use the character your Discord user is associated with, or specify a specific character.\n Usage: .r [number or name of stat] [*character]')
     async def botroll(self, ctx, stat='0', character="user"):
         
         character = matchabbr(character,self.chardata)
@@ -36,7 +36,7 @@ class LOTE(commands.Cog):
                     response = botrollstring(ctx,stat,charinfo)
             await ctx.send(response)
 
-    @commands.command(name='m', help='Do a specific move.',description='By default, use the character your Discord user is associated with, or specify a character to roll for.\n Usage: .m [name of move or abbreviation] [*character]')
+    @commands.command(name='m', help='Do a specific move',description='By default, use the character your Discord user is associated with, or specify a character to roll for.\n Usage: .m [name of move or abbreviation] [*character]')
     async def rollformove(self,ctx,move=None,character="user"):
         character = matchabbr(character,self.chardata)
         charinfo,response = botgetcharinfo(ctx,character,self.chardata)    
@@ -122,7 +122,7 @@ class LOTE(commands.Cog):
                 )
         return responselist
 
-    @commands.command(name='update', help='Update a value on a character\'s sheet.',description='Update a value on a character\'s sheet. This can be overwritten unless saved using the save command. \n Usage: .set fluid 3 katara')
+    @commands.command(name='update', help='Update a value on a character\'s sheet',description='Update a value on a character\'s sheet. This can be overwritten unless saved using the save command. \n Usage: .set fluid 3 katara')
     async def outputlist(self,ctx,key=None,newval=None,character='user'):
         if not newval or not key:
             response = f'{ctx.message.author.mention}: Invalid input, try again. Example syntax: .set fluid 3 katara.'

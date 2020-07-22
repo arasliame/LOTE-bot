@@ -13,7 +13,7 @@ class fiasco(commands.Cog):
         self.curphase = 'no game' 
         self.tiltelements = []
         self.tablefile = 'fiascotables.json'
-        self.phaseorder = phaseorder = ['no game','setup','act one','tilt','act two','aftermath','reset fiasco']
+        self.phaseorder = ['no game','setup','act one','tilt','act two','aftermath','reset']
 
     def phasecheck(self,checkphase):
         
@@ -25,7 +25,7 @@ class fiasco(commands.Cog):
         else:
             return None
 
-    @commands.command(name='nextphase',help='Go to the next phase in Fiasco',description='Go to the next phase in Fiasco. Phase order: No Game > Setup > Act One > Tilt > Act Two > Aftermath')
+    @commands.command(name='next',help='Go to the next phase in Fiasco',description='Go to the next phase in Fiasco. Phase order: No Game > Setup > Act One > Tilt > Act Two > Aftermath')
     async def botnextphase(self, ctx):
         curindex = self.phaseorder.index(self.curphase)
         nextphase = self.phaseorder[curindex + 1].replace(" ","")
@@ -35,50 +35,23 @@ class fiasco(commands.Cog):
         if cmd:
             await ctx.invoke(cmd)
         
+    def matchuser(self,playername=None,username=None):
+        curplayer = []
+        
+        for player in self.allplayers:
+            if playername:
+                # there is probably a better way of doing this that doesn't involve being in the for loop twice?
+                allnames = [player.playername.lower() for player in self.allplayers]
+                playername = checkabbrs(playername.lower(),allnames)
 
-            
-
-    @commands.command(name='addplayer',help='Add a player to Fiasco',description='Add a new player to a Fiasco game. \nExample usage: \n\t(.addplayer [player\'s name] [*Discord username] *optional)\n\t.addplayer Sara \n\t.addplayer Joe joesusername#1111')
-    async def botaddfiascoplayer(self, ctx, playername=None, username=None):
-        if self.curphase != 'no game':
-            response = 'Game in progress, invalid input. To add new players, you must reset the game and start over.'
-        else: 
-            self.curphase = 'no game'
-            username = ctx.message.author if not username else username
-                
-            if not playername:
-                response = 'No player name specified, please try again.'
-            else:    
-                self.allplayers,response = addplayer(self.allplayers,playername,username)
-
-            response = f'{ctx.message.author.mention}: '+ response
-
-        await ctx.send(response)
-
-    @commands.command(name='setup',help='Setup phase of Fiasco',hidden=True)
-    async def botsetupfiasco(self,ctx):
-        responselist = [f'{ctx.message.author.mention}: ']
-
-        self.allrelationships,self.tabledice = setupfiasco(self.allplayers)            
-
-        if not self.allrelationships:
-            responselist.append('Not enough players. Add more players and try again.')
-        else:
-            resp = self.phasecheck('setup')
-            
-            if resp:
-                responselist.append(resp)
+                if player.playername.lower() == playername.lower():
+                    curplayer.append(player)
             else:
-                self.curphase = 'setup'
-                playerlist = []
-                for player in self.allplayers:
-                    playerlist.append(player.playername)
-                responselist.append('*Game started with players ' + ', '.join(playerlist)+'*')
-                responselist.append('Begin the Setup!') # maybe add some rules explanation here
-                responselist.append(displaydice(self.tabledice))
-            
-        response = "\n".join(responselist)
-        await ctx.send(response)
+                if player.username == username:
+                    curplayer.append(player)
+
+        return None if len(curplayer) != 1 else curplayer[0]
+
 
     @commands.command(name='test',help='Command used in testing',hidden=True)
     async def botaddtestchars(self,ctx,stage=None):
@@ -121,22 +94,19 @@ class fiasco(commands.Cog):
     
             await ctx.send("Finished taking dice in act two")
 
-    def matchuser(self,playername=None,username=None):
-        curplayer = []
+    @commands.command(name='fill',help='fill relationships for testing',hidden=True)
+    async def botfill(self,ctx,all=None):
+        for rel in self.allrelationships:
+            rel.parentcategory = 'Friends'
+            rel.parentelement = 'Grade school friends'
+            rel.detailtype = 'Object'
+            rel.detailcategory = 'Weapon'
+            if all:
+                rel.detailelement = 'Old, taped-up oar'
         
-        for player in self.allplayers:
-            if playername:
-                # there is probably a better way of doing this that doesn't involve being in the for loop twice?
-                allnames = [player.playername.lower() for player in self.allplayers]
-                playername = checkabbrs(playername.lower(),allnames)
+        await ctx.send("Finished filling relationships")
 
-                if player.playername.lower() == playername.lower():
-                    curplayer.append(player)
-            else:
-                if player.username == username:
-                    curplayer.append(player)
 
-        return None if len(curplayer) != 1 else curplayer[0]
         
 
     @commands.command(name='take',help='Take a die',description='Take a die from a player or from the regular pool. Defaults to taking from the pool. \nExample usage:\n\t(.take [die] [*takefrom] [*taking]) *optional\n\t.take 6\n\t.take pos pool Sara\n\t .take pos Joe Sara')
@@ -146,6 +116,8 @@ class fiasco(commands.Cog):
         showemoji = self.diceemoji if self.curphase in ['act one','act two'] else None
         if self.curphase in ['tilt']:
             responselist.append('Cannot give or take dice during the Tilt.')
+        elif not diestring:
+            responselist.append('No valid die input, try again.')
         else:
             username = ctx.message.author
             takingplayer = self.matchuser(taking,username)
@@ -184,12 +156,14 @@ class fiasco(commands.Cog):
 
 
     @commands.command(name='give',help='Give a die',description='Give a die. Defaults to giving to the pool. \nExample usage:\n\t(.give [die] [*giveto] [*giving]) *optional\n\t.give 6\n\t.give pos Joe Sara\n\t .give neg Sara')
-    async def botgivedie(self,ctx,diestring,giveto='pool',getfrom=None):
+    async def botgivedie(self,ctx,diestring=None,giveto='pool',getfrom=None):
         # arguments: .give [die] to [person to giveto] as [person to get from]
         responselist = [f'{ctx.message.author.mention}: ']
         showemoji = self.diceemoji if self.curphase in ['act one','act two'] else None
         if self.curphase in ['tilt']:
             responselist.append('Cannot give or take dice during the Tilt.')
+        elif not diestring:
+            responselist.append('No valid die input, try again.')
         else:
             username = ctx.message.author
             getfromplayer = self.matchuser(getfrom,username)
@@ -267,7 +241,7 @@ class fiasco(commands.Cog):
         await ctx.send(response)
 
 
-    @commands.command(name='show',help='Display relationships, tilt elements, and/or dice.', description='Usage ([argument] [*optional]): \n\tShow all: .show all \n\tShow relationships: .show rel [*player] \n\t Show Tilt elements: .show tilt \n\t Show dice: .show dice [*player or pool]')
+    @commands.command(name='show',help='Display relationships, tilt elements, and/or dice', description='Usage ([argument] [*optional]): \n\nShow all: .show all \nShow relationships: .show rel [*player] \n Show Tilt elements: .show tilt \n Show dice: .show dice [*player or pool]')
     async def botshow(self,ctx,showwhat='all',playername=None,username='all'): # player is a toggle to see only one player or user's relationships
         responselist = [f'{ctx.message.author.mention}: ']
         
@@ -337,7 +311,7 @@ class fiasco(commands.Cog):
         await ctx.send(response)
     
 
-    @commands.command(name='resetfiasco',help='Reset your game')
+    @commands.command(name='reset',help='Reset your game')
     async def botresetfiasco(self,ctx):
         self.curphase = 'no game'
         self.allplayers = []
@@ -345,6 +319,50 @@ class fiasco(commands.Cog):
         self.tabledice = []
 
         await ctx.send(f'{ctx.message.author.mention}: Fiasco game has been completely reset. Add players to start a new game.')
+
+    
+
+    @commands.command(name='add',help='Add a player to Fiasco during setup',description='Add a new player to a new Fiasco game. \nExample usage: \n\t(.addplayer [player\'s name] [*Discord username] *optional)\n\t.addplayer Sara \n\t.addplayer Joe joesusername#1111')
+    async def botaddfiascoplayer(self, ctx, playername=None, username=None):
+        if self.curphase != 'no game':
+            response = 'Game in progress, invalid input. To add new players, you must reset the game and start over.'
+        else: 
+            self.curphase = 'no game'
+            username = ctx.message.author if not username else username
+                
+            if not playername:
+                response = 'No player name specified, please try again.'
+            else:    
+                self.allplayers,response = addplayer(self.allplayers,playername,username)
+
+            response = f'{ctx.message.author.mention}: '+ response
+
+        await ctx.send(response)
+
+    @commands.command(name='setup',help='Setup phase of Fiasco',hidden=True)
+    async def botsetupfiasco(self,ctx):
+        responselist = [f'{ctx.message.author.mention}: ']
+
+        self.allrelationships,self.tabledice = setupfiasco(self.allplayers)            
+
+        if not self.allrelationships:
+            responselist.append('Not enough players. Add more players and try again.')
+        else:
+            resp = self.phasecheck('setup')
+            
+            if resp:
+                responselist.append(resp)
+            else:
+                self.curphase = 'setup'
+                playerlist = []
+                for player in self.allplayers:
+                    playerlist.append(player.playername)
+                responselist.append('*Game started with players ' + ', '.join(playerlist)+'*')
+                responselist.append('Begin the Setup!') # maybe add some rules explanation here
+                responselist.append(displaydice(self.tabledice))
+            
+        response = "\n".join(responselist)
+        await ctx.send(response)
 
     # add stunt die handling to this someday
     @commands.command(name='actone',help='Act One of Fiasco',hidden=True)
@@ -378,17 +396,6 @@ class fiasco(commands.Cog):
         response = "\n".join(responselist)
         await ctx.send(response)
 
-    @commands.command(name='fill',help='fill relationships for testing',hidden=True)
-    async def botfill(self,ctx,all=None):
-        for rel in self.allrelationships:
-            rel.parentcategory = 'Friends'
-            rel.parentelement = 'Grade school friends'
-            rel.detailtype = 'Object'
-            rel.detailcategory = 'Weapon'
-            if all:
-                rel.detailelement = 'Old, taped-up oar'
-        
-        await ctx.send("Finished filling relationships")
 
     def tiltcalc(self,allvals,pos,neg):
         valslist = [pos,neg]
