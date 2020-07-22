@@ -95,8 +95,8 @@ class fiascorelationship():
     def disprel(self):
         dispstr = (
             f"```{self.withwho[0].playername} and {self.withwho[1].playername}: \n"
-            f"\t{self.parentcategory.title() if self.parentcategory else '[ParentCategory]'} ({self.parentelement.title() if self.parentelement else '[ParentElement]'}) \n"
-            f"\t{self.detailtype.upper() if self.detailtype else '[DetailType]'}: {self.detailcategory.title() if self.detailcategory else '[DetailCategory]'} ({self.detailelement.title() if self.detailelement else '[DetailElement]'}) ```"
+            f"\t{self.parentcategory.title() if self.parentcategory else '[ParentCategory]'} - {self.parentelement.title() if self.parentelement else '[ParentElement]'} \n"
+            f"\t({self.detailtype.upper() if self.detailtype else '[DetailType]'}) {self.detailcategory.title() if self.detailcategory else '[DetailCategory]'} - {self.detailelement.title() if self.detailelement else '[DetailElement]'} ```"
             )
         return dispstr
 
@@ -107,12 +107,9 @@ class fiascotilt():
     def __init__(self,category,element):
         self.category = category
         self.element = element
-    
-    def disp(self):
-        return f"```Tilt: {self.category.upper()} - {self.element}```"
 
     def __repr__(self):
-        return f'{self.category.upper()} - {self.element}'
+        return f"```Tilt: {self.category.upper()} - {self.element}```"
 
 
 def checkabbrs(inp,inputlist):
@@ -151,7 +148,6 @@ class fiascodie():
 def setupdice(numplayers):
     numdice,alldice = numplayers * 4,[]
     for x in range(numdice): alldice.append(fiascodie())
-
     return alldice
 
 def addplayer(allplayers,playername,username):
@@ -211,7 +207,7 @@ def movedie(dietype,dienum,giveto,getfrom,giveortake='took'):
                     response = f'{giveortake} a {die.dietype.title()} stunt die {tofrom}'
 
         else:
-            if not die.stunt:
+            if not die.stunt: # can't move a stunt die unless you specify that it is a stunt die
                 if die.dietype == dietype and die.dienum == dienum and dietype and dienum:
                     response = f'{giveortake} a {dietype.title()} {dienum} {tofrom}'
                 elif die.dietype == dietype and not dienum:
@@ -294,7 +290,7 @@ def tilttie2(players,tietocheck):
 
 def displaytilt(elems):
     resp = '*All Tilt Elements:*'
-    for elem in elems: resp += f'{elem.disp()}'
+    for elem in elems: resp += f'{elem}'
     return resp
 
 

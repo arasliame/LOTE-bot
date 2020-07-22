@@ -58,7 +58,7 @@ class LOTE(commands.Cog):
                 
         await ctx.send(response)
 
-    @commands.command(name='list', help='List all moves, characters, or individual character stats.',description='Type m to see moves, c to see characters, or a character\'s name to see their stats.')
+    @commands.command(name='list', help='List all moves, characters, or specific character stats',description='Type m to see moves, c to see characters, or a character\'s name to see their stats.')
     async def liststuff(self,ctx,listtype='m'):
         
         responselist = [f'{ctx.message.author.mention}:']

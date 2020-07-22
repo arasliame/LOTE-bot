@@ -1,7 +1,6 @@
 from fiascohelpers import *
 from discord.ext import commands
 
-
 def setup(bot):
     bot.add_cog(fiasco(bot))
 
@@ -21,15 +20,14 @@ class fiasco(commands.Cog):
         self.stunttype = False # do stunt dice have a type?
 
     # func for toggling stunt dice
-    @commands.command(name='stunt',help='Toggle whether to use stunt dice or not',description='make a description')
+    @commands.command(name='stunt',help='Toggle whether to use stunt dice or not',description='Add stunt dice to game. Specify the total number of stunt dice and whether or not they should be wild. If they should be wild, no second argument. If they shouldn\'t, add a second argument.')
     async def botstunt(self,ctx,numstuntdice=0,stunttype=False):
         
-        response = f'{ctx.message.author.mention}: ' # why is python mad at me
-
+        response = f'{ctx.message.author.mention}: ' 
 
         if self.curphase != 'no game':
             response += 'This command cannot be used while a game is in progress.'
-        else: # int(numstuntdice) > 0:
+        else: 
             self.stuntdice = int(numstuntdice)
             response += f'Number of stunt dice set to {self.stuntdice}.'
             if int(numstuntdice) > 0:
@@ -84,6 +82,8 @@ class fiasco(commands.Cog):
         self.allplayers,response = addplayer(self.allplayers,'Sara',username)
         self.allplayers,response = addplayer(self.allplayers,'Karl','joe123')
         self.allplayers,response = addplayer(self.allplayers,'Joe','karl123')
+        self.allplayers,response = addplayer(self.allplayers,'Joe2','karl123fd')
+        self.allplayers,response = addplayer(self.allplayers,'Joe3','fdsakarl123fd')
         
         await ctx.send('Test setup characters complete')
 
@@ -231,8 +231,25 @@ class fiasco(commands.Cog):
         responselist = [f'{ctx.message.author.mention}: ']
 
         if self.curphase == 'setup':
-            if not p1 or not p2 or not reltype or not relstring:
-                responselist.append('Invalid input. Example: .set joe karl parentelement "fellow camp counselors"')
+            if p1 == 'newname':
+                match = False
+                player = self.matchuser(p2,None)
+
+                if player:
+                    self.allplayers.remove(player)
+                    responselist.append(f'Changed {player.playername}\'s name to {reltype}.')
+                    for rel in self.allrelationships:
+                        if rel.withwho[0].playername == player.playername:
+                            rel.withwho[0].playername = reltype
+                        elif rel.withwho[1].playername == player.playername:
+                            rel.withwho[1].playername = reltype
+                    player.playername = reltype                    
+                    self.allplayers.append(player)
+                else:
+                    responselist.append(f'No matching player found, unable to update player name.')
+        
+            elif not p1 or not p2 or not reltype or not relstring:
+                responselist.append('Invalid input. Example: .set joe karl parentelement "fellow camp counselors" or .set newname joe "Jim aka Sweaty"')
             else:
                 responselist.append(setrelationshipinfo(self.allrelationships,p1.lower(),p2.lower(),reltype,relstring))
         elif self.curphase == 'tilt':
@@ -293,7 +310,7 @@ class fiasco(commands.Cog):
 
         if showwhat == "relationships" or showwhat == 'all':
             if not self.allrelationships:
-                responselist.append('No relationships available.')
+                responselist.append('*No relationships available.*\n')
             else:
                 if playername in ['me','mine']:
                     username,playername = ctx.message.author,None
@@ -318,8 +335,9 @@ class fiasco(commands.Cog):
                 responselist.append('*No Tilt elements to display.* Use .show tilttable to see the Tilt table.')
 
         if showwhat =='tilttable':
-            # show the soft tilt table instead
-            t = loadtables(self.tablefile,'softtilt') if playername == 'soft' else loadtables(self.tablefile,'tilt')
+            
+            t = loadtables(self.tablefile,'softtilt') if playername == 'soft' else loadtables(self.tablefile,'tilt') # toggle to show the soft tilt table instead
+
             resp = '*Tilt Table:* ```'
             for num in t:
                 resp += f'{num}: {t.get(num).get("category").upper()}'
@@ -379,8 +397,8 @@ class fiasco(commands.Cog):
                 
                 for player in self.allplayers:
                     playerlist.append(player.playername)
-                responselist.append('*Game started with players ' + ', '.join(playerlist)+'*')
-                responselist.append('Begin the Setup!') # maybe add some rules explanation here
+                responselist.append('*Beginning the Setup with players ' + ', '.join(playerlist)+'*')
+                responselist.append('Create relationships between your characters by taking dice and defining relationship elements. \nDon\'t forget to update your character names once you have them! (.set newname "old name" "awesome new name")') # maybe add some rules explanation here
                 responselist.append(self.displaydice())
             
         response = "\n".join(responselist)
@@ -479,7 +497,7 @@ class fiasco(commands.Cog):
 
                 responselist.extend(tiltresp)
 
-                responselist.append(f"**{tiltp1.playername}** ({tiltp1.scores['tilt']['totalsign'].title()} {tiltp1.scores['tilt']['totalval']}) and **{tiltp2.playername}** ({tiltp2.scores['tilt']['totalsign'].title()} {tiltp2.scores['tilt']['totalval']}) get to decide what happens in the Tilt! Use the dice below and consult the Tilt table to add one Tilt element each.")
+                responselist.append(f"**{tiltp1.playername}** ({tiltp1.scores['tilt']['totalsign'].title()} {tiltp1.scores['tilt']['totalval']}) and **{tiltp2.playername}** ({tiltp2.scores['tilt']['totalsign'].title()} {tiltp2.scores['tilt']['totalval']}) get to decide what happens in the Tilt! Use the dice below and consult the Tilt table (.show tilttable) to add one Tilt element each.")
                 responselist.append(self.displaydice())
         
         response = "\n".join(responselist)
@@ -553,8 +571,6 @@ class fiasco(commands.Cog):
         response = "\n".join(responselist)
         await ctx.send(response)
 
-    # need to display stunt dice someday   
-    # stunt dice always show up in their own category in the table pool, show up as pos or neg in player pools
     def displaydice(self,player=None):
         dice = player.dice if player else self.tabledice
         emoji = True if self.curphase in ['act one','act two'] else False
@@ -587,12 +603,13 @@ class fiasco(commands.Cog):
                 else:
                     typedict["no type"].append(die)
 
-        for dietype in sorted(typedict.keys()):
-            if typedict[dietype]:
-                if len(typedict[dietype]) >= 1 and len(typedict) > 2: # don't show "no type" or "stunt" if they're the only things on the list
-                    response += f'\t {dietype.title()}: '
 
-                if emoji:
+        if emoji:
+            for dietype in sorted(typedict.keys()):
+                if typedict[dietype]:   
+                    if len(typedict[dietype]) >= 1: # and len(typedict) > 2: # don't show "no type" or "stunt" if they're the only things on the list
+                        response += f'\t {dietype.title()}: '
+                    
                     emojistr = ''
                     for die in typedict[dietype]: 
                         if die.stunt:
@@ -600,12 +617,16 @@ class fiasco(commands.Cog):
                         else:
                             emojistr += f'{emojidict.get(dietype)} ' # handle stunt dice when displaying emojis, needs handling for dice in player hands?
                     response = response + emojistr + '\n'
-                else:
-                    response += '[' # number display does not show stunt dice if they are typed, also do not need to show types if in tilt phase
-                    for die in typedict[dietype]:
-                        response += f'{die.dienum}, '
-                    response = response[:-2] + ']\n'
-        
+        else:
+            response += '[' # number display does not show die types
+            for dietype in typedict:
+                for die in typedict[dietype]:
+                    response += f'{die.dienum}, '
+            if response[-1] != '[':
+                response = response[:-2] + ']\n'
+            else:
+                response = response[:-2]
+    
         if not emoji:
             response += '```'
             
