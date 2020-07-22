@@ -1,6 +1,7 @@
 from discord.ext import commands
 from lotehelpers import *
 
+
 def setup(bot):
     characterfile = 'characters.json'
     movefile = 'moves.json'

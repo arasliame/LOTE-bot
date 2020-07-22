@@ -9,14 +9,14 @@ class fiascoplayer():
         self.dice = []
         self.scores = {
             "tilt": {
-                "positive":[0],
-                "negative":[0],
+                "type1":[0],
+                "type2":[0],
                 "totalsign":None,
                 "totalval":0
             },
             "aftermath": {
-                "positive":[0],
-                "negative":[0],
+                "type1":[0],
+                "type2":[0],
                 "totalsign":None,
                 "totalval":0
             }
@@ -26,46 +26,41 @@ class fiascoplayer():
     def __repr__(self):
         return f'{self.playername} ({self.username})'
 
-    def dispdice(self,emoji=None):
-        return displaydice(self.dice,self.playername,emoji)
-
-    def calcscore(self,scorekind): # only works with positive and negative dice
+    def calcscore(self,scorekind,type1,type2):
         self.scores[scorekind] = {
-                "positive":[0],
-                "negative":[0],
+                type1:[0],
+                type2:[0],
                 "totalsign":None,
                 "totalval":0
             }
-        posstr = ''
-        negstr = ''
+        str1 = ''
+        str2 = ''
         for die in self.dice:
             newnum = die.roll()
-            if die.dietype == 'positive':
-                self.scores[scorekind]['positive'].append(newnum)
-                posstr = posstr + f'{newnum}+'
-            elif die.dietype == 'negative':
-                self.scores[scorekind]['negative'].append(newnum)
-                negstr = negstr + f'{newnum}+'
+            if die.dietype == type1:
+                self.scores[scorekind][type1].append(newnum)
+                str1 = str1 + f'{newnum}+'
+            elif die.dietype == type2:
+                self.scores[scorekind][type2].append(newnum)
+                str2 = str2 + f'{newnum}+'
         
-        sumpos = sum(self.scores[scorekind]['positive'])
-        sumneg = sum(self.scores[scorekind]['negative'])
+        sum1,sum2 = sum(self.scores[scorekind][type1]), sum(self.scores[scorekind][type2])
 
-        posstr = posstr[:-1] + f" = {sumpos}"
-        negstr = negstr[:-1] + f" = {sumneg}"
+        str1,str2 = str1[:-1] + f" = {sum1}",str2[:-1] + f" = {sum2}"
 
-        final = sumpos - sumneg
+        final = sum1 - sum2
 
         if final > 0:
-            sign = 'positive'
+            sign = type1
         elif final < 0:
-            sign = 'negative'
+            sign = type2
         else:
             sign = 'zero'
         
         resp = (
-            f"```Rolling {len(self.scores[scorekind]['positive'])-1} Positive and {len(self.scores[scorekind]['negative'])-1} Negative: \n"
-            f"Positive: {posstr} \n"
-            f"Negative: {negstr} \n\n"
+            f"```Rolling {len(self.scores[scorekind][type1])-1} {type1.title()} and {len(self.scores[scorekind][type2])-1} {type2.title()}: \n"
+            f"{type1.title()}: {str1} \n"
+            f"{type2.title()}: {str2} \n\n"
             f"Final Score: {sign.title()} {abs(final)}```"
         )
 
@@ -119,8 +114,6 @@ class fiascotilt():
     def __repr__(self):
         return f'{self.category.upper()} - {self.element}'
 
-def gettilttable(soft=None):
-    t = loadtables("fiascotables.json","tilt") if not soft else loadtables("fiascotables.json","softtilt")
 
 def checkabbrs(inp,inputlist):
     abbrs = list(filter(lambda x: x.startswith(inp),inputlist))
@@ -148,12 +141,15 @@ class fiascodie():
         return self.dienum
 
     def __repr__(self):
-        # need this to take into account dietypes probably?
-        return f'{self.dietype.title()} {self.dienum}' if self.dietype else str(self.dienum)
+        rep = f'{self.dienum}'
+        if self.dietype:
+            rep = f'{self.dietype.title()} {rep}'
+        if self.stunt:
+            rep += 'S'
+        return rep
     
 def setupdice(numplayers):
-    numdice = numplayers * 4
-    alldice = []
+    numdice,alldice = numplayers * 4,[]
     for x in range(numdice): alldice.append(fiascodie())
 
     return alldice
@@ -177,8 +173,7 @@ def addplayer(allplayers,playername,username):
     return allplayers,response
 
 def setupfiasco(allplayers):
-    numplayers = len(allplayers)
-    allrelationships = []
+    numplayers,allrelationships = len(allplayers),[]
 
     if numplayers < 3:
         return None,None
@@ -190,84 +185,45 @@ def setupfiasco(allplayers):
         
         return allrelationships,setupdice(numplayers)
     
-def displaydice(tabledice,whose=None,emoji=None):
-    return displaydiceemoji(tabledice,whose,emoji) if emoji else displaydicenums(tabledice,whose) 
-    # also need to display stunt dice somehow someday
-            
-def displaydiceemoji(tabledice,whose=None,emoji=None):
-    typedict = {
-        "Positive":[],
-        "Negative":[],
-        "No type":[],
-    }
-    for die in tabledice:
-        if die.dietype == 'positive':
-            typedict["Positive"].append(f'{emoji[0]}')
-        elif die.dietype == 'negative':
-            typedict["Negative"].append(f'{emoji[1]}')
-        else:
-            typedict["No type"].append(die.dienum)
-    
-    response = f"```{whose}'s Dice Pool:```" if whose else f"```Table Dice Pool ({len(tabledice)}):```"
-    
-    for dietype in typedict:
-        if typedict[dietype]:
-            emojistr = f'\t{dietype}: '
-            for oneemoji in typedict[dietype]: emojistr = f'{emojistr}{oneemoji} '
-            response = response + emojistr + '\n'
 
-    return response
-
-def displaydicenums(tabledice,whose=None):
-    typedict = {"No type":[]}
-    for die in tabledice:
-        if die.dietype:
-            if die.dietype not in typedict:
-                typedict[die.dietype] = []
-                typedict[die.dietype].append(die.dienum)
-            else:
-                typedict[die.dietype].append(die.dienum)
-        else:
-            typedict["No type"].append(die.dienum)
-        
-    responselist = [f"```{whose}'s Dice Pool:"] if whose else ["```Table Dice Pool:"]
-    
-    keys = list(typedict.keys())
-
-    if keys == ['No type']:
-        responselist.append(f'{typedict["No type"]}')
-    else:
-        for dietype in typedict:
-            if typedict[dietype]:
-                responselist.append(f'\t{dietype.title()}: {typedict[dietype]}')
-        
-    responselist.append("```")
-    return "\n".join(responselist)
             
 def movedie(dietype,dienum,giveto,getfrom,giveortake='took'):
     tofrom = 'from' if giveortake == 'took' else 'to'
+    response = None
+    
+# if dienum is s, then you're moving a stunt die
+    inpdietype = dietype
+    if dienum == 's':    
+        dietype = 'stunt'
 
-    if dietype and dienum:
-        for die in getfrom:
-            if die.dietype == dietype and die.dienum == dienum:
-                giveto.append(die)
-                getfrom.remove(die)
-                response = f'{giveortake} a {dietype.title()} {dienum} {tofrom}'
-                return response,giveto,getfrom
-    elif dietype:
-        for die in getfrom:
-            if die.dietype == dietype:
-                giveto.append(die)
-                getfrom.remove(die)
-                response = f'{giveortake} a {dietype.title()} die {tofrom}'
-                return response,giveto,getfrom
-    elif dienum:
-        for die in getfrom:
-            if die.dienum == dienum:
-                giveto.append(die)
-                getfrom.remove(die)
-                response = f'{giveortake} a {dienum} {tofrom}'
-                return response,giveto,getfrom
+    for die in getfrom:
+
+        if dietype == 'stunt':
+            if die.stunt and die.dietype == 'stunt': # stunt dice do not have a type
+                if inpdietype != 'stunt':
+                    response = f'{giveortake} a {inpdietype.title()} stunt die {tofrom}'
+                    die.dietype = inpdietype
+                    die.stunt = False
+                    
+            elif die.stunt and die.dietype != 'stunt': # stunt dice do have a type
+                if die.dietype == inpdietype:
+                    die.stunt = False
+                    response = f'{giveortake} a {die.dietype.title()} stunt die {tofrom}'
+
+        else:
+            if not die.stunt:
+                if die.dietype == dietype and die.dienum == dienum and dietype and dienum:
+                    response = f'{giveortake} a {dietype.title()} {dienum} {tofrom}'
+                elif die.dietype == dietype and not dienum:
+                    response = f'{giveortake} a {dietype.title()} die {tofrom}'
+                elif die.dienum == dienum and not dietype:
+                    response = f'{giveortake} a {dienum} {tofrom}'
+            
+        if response:
+            giveto.append(die)
+            getfrom.remove(die)
+            return response,giveto,getfrom
+
     return None,giveto,getfrom
 
 
@@ -342,45 +298,20 @@ def displaytilt(elems):
     return resp
 
 
-def parsediestring(diestring,pooldice):
-    poollist = {}
-    poollist = {die.dietype for die in pooldice if die.dietype}
-
-    if len(diestring) == 1:
-        try:
-            dienum = int(diestring)
-            dietype = None
-        except ValueError or TypeError:
-            dienum = None
-            dietype = diestring
-    else:
-        dietype = diestring[:-1]
-        dienum = diestring[-1]
-    
-    if dietype:
-        dietype = dietype.lower()
-        dietype = checkabbrs(dietype,poollist) # check to see if this type of die exists in a given pool
-
-    if dienum:
-        try:
-            dienum = int(dienum)
-            if dienum > 0 and dienum <= 6:
-                return dietype,dienum 
-            else:
-                return dietype,None
-        except ValueError or TypeError:
-            return dietype,None
-
-    return dietype,dienum
-    
-def rollactone(numplayers):
+def rollactone(numplayers,types,stunt=None,stunttype=False):
     numdice = numplayers * 2
 
     alldice = []
     for x in range(numdice):
-        alldice.append(fiascodie('positive'))
-        alldice.append(fiascodie('negative'))
+        alldice.append(fiascodie(types[0]))
+        alldice.append(fiascodie(types[1]))
     
+    if stunt:
+        for x in range(stunt):
+            alldice[x].stunt = True
+            if not stunttype:
+                alldice[x].dietype = "stunt"
+
     return alldice
 
 def loadtables(tablefile,whichtable):
@@ -394,5 +325,4 @@ def loadtables(tablefile,whichtable):
     return t
 
 if __name__ == "__main__":
-    t = loadtables("fiascotables.json","aftermath")
-    print(t.get('positive'))
+    pass
