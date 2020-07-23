@@ -68,7 +68,7 @@ class fiasco(commands.Cog):
                 if pbname == playbookname.lower():
                     with file.open(mode='r') as fin:
                         self.playbook = json.load(fin)
-                    response = f'\n {playbookname} playbook sucessfully loaded!'
+                    response = f'\n "{self.playbook["playbookname"]}" playbook sucessfully loaded!'
         
         if response:
             response = f'{ctx.message.author.mention}: ' + response
@@ -292,7 +292,7 @@ class fiasco(commands.Cog):
                             responselist.append(setrelationshipinfo(self.allrelationships,p1.lower(),p2.lower(),'detailelement',self.playbook[reltype].get(relstring).get(relcat)))
                     else:
                         responselist.append(f'Invalid input. Example: .set sara joe rel 3 2 or .set joe karl parentelement "fellow camp counselors"')
-                except KeyError:
+                except KeyError or TypeError:
                     responselist.append(f'Invalid input. Example: .set sara joe rel 3 2 or .set joe karl parentelement "fellow camp counselors"')
             elif not p1 or not p2 or not reltype or not relstring:
                 responselist.append('Invalid input. Example: .set joe karl parentelement "fellow camp counselors" or .set newname joe "Jim aka Sweaty"')
@@ -388,7 +388,7 @@ class fiasco(commands.Cog):
                 resp += f'{num}: {t.get(num).get("category").upper()}'
                 for x in range(1,7):
                     resp += f'\n\t{x}: {t.get(num).get(str(x))}'
-                resp += '\n'
+                resp += '\n\n'
             resp += '```'
             responselist.append(resp)
 
