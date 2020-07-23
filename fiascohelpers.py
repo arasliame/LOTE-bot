@@ -95,8 +95,8 @@ class fiascorelationship():
     def disprel(self):
         dispstr = (
             f"```{self.withwho[0].playername} and {self.withwho[1].playername}: \n"
-            f"\t{self.parentcategory.title() if self.parentcategory else '[ParentCategory]'} - {self.parentelement.title() if self.parentelement else '[ParentElement]'} \n"
-            f"\t({self.detailtype.upper() if self.detailtype else '[DetailType]'}) {self.detailcategory.title() if self.detailcategory else '[DetailCategory]'} - {self.detailelement.title() if self.detailelement else '[DetailElement]'} ```"
+            f"\t{self.parentcategory.title() if self.parentcategory else '[ParentCategory]'} - {self.parentelement if self.parentelement else '[ParentElement]'} \n"
+            f"\t({self.detailtype.upper() if self.detailtype else '[DetailType]'}) {self.detailcategory.title() if self.detailcategory else '[DetailCategory]'} - {self.detailelement if self.detailelement else '[DetailElement]'} ```"
             )
         return dispstr
 
@@ -223,7 +223,32 @@ def movedie(dietype,dienum,giveto,getfrom,giveortake='took'):
     return None,giveto,getfrom
 
 
-def setrelationshipinfo(relationships,p1name,p2name,reltype,relstring):
+def getrelationship(relationships,p1name,p2name):
+    for rel in relationships:
+        player1 = rel.withwho[0]
+        player2 = rel.withwho[1]
+
+        if (p1name == player1.playername.lower() and p2name == player2.playername.lower()) or (p1name == player2.playername.lower() and p2name == player1.playername.lower()):
+            return rel
+    
+    return None
+    # consolidate this with setrelationshipinfo
+
+def findwhattofill(rel,reltype):
+    if reltype == 'relationships':
+        if not rel.parentcategory:
+            return 'parentcategory'
+        elif not rel.parentelement:
+            return 'parentelement'
+    else:
+        if not rel.detailcategory:
+            return 'detailcategory'
+        elif not rel.detailelement:
+            return 'detailelement'
+    
+    return None
+
+def setrelationshipinfo(relationships,p1name,p2name,reltype,relstring,toggleblock=True):
 
     for rel in relationships:
         player1 = rel.withwho[0]
@@ -235,11 +260,14 @@ def setrelationshipinfo(relationships,p1name,p2name,reltype,relstring):
             
             if reltype in rel.__dict__:
                 rel.__dict__[reltype] = relstring
-                resp = f'For {player1.playername} and {player2.playername}\'s relationship, {reltype} has been set to "{relstring}" \n'
-                return resp + rel.disprel()
+                resp = f'For {player1.playername} and {player2.playername}\'s relationship, {reltype} has been set to "{relstring}" '
+                if toggleblock:
+                    return resp + '\n' + rel.disprel()
+                else:
+                    return resp
 
             else:
-                return f'No match for {reltype} found. Try again.'
+                return f'Invalid input. Try again.'
         
     return "No matching relationship found. Try again."
 

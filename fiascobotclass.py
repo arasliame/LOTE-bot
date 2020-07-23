@@ -1,5 +1,7 @@
 from fiascohelpers import *
 from discord.ext import commands
+from pathlib import Path
+import json
 
 def setup(bot):
     bot.add_cog(fiasco(bot))
@@ -18,6 +20,8 @@ class fiasco(commands.Cog):
         self.phaseorder = ('no game','setup','act one','tilt','act two','aftermath','reset')
         self.stuntdice = 0 # how many stunt dice are there, if any. stunt dice do not inherently have a type? need to toggle whether stunt dice have a type - mostly only matters for display
         self.stunttype = False # do stunt dice have a type?
+        self.playbook =  dict()
+        self.pbstuff = ('relationships','needs','objects','locations')
 
     # func for toggling stunt dice
     @commands.command(name='stunt',help='Toggle whether to use stunt dice or not',description='Add stunt dice to game. Specify the total number of stunt dice and whether or not they should be wild. If they should be wild, no second argument. If they shouldn\'t, add a second argument.')
@@ -47,6 +51,32 @@ class fiasco(commands.Cog):
             return f"Invalid phase selection. You're currently in {self.curphase.title()}, so your next phase should be {self.phaseorder[nextindex].title()}."
         else:
             return None
+
+    @commands.command(name='playbook',help='Load a playbook from a json file in the playbooks folder.')
+    async def botloadplaybook(self, ctx, playbookname='nah'):
+        
+        response = ''
+
+        if self.curphase != 'no game':
+            response = 'This command cannot be used while a game is in progress.'
+        else: 
+            
+            pbpath = Path(__file__).parent.joinpath('playbooks')
+            for file in pbpath.glob('*.json'):
+                pbname = file.stem.lower().split("-")[1]
+
+                if pbname == playbookname.lower():
+                    with file.open(mode='r') as fin:
+                        self.playbook = json.load(fin)
+                    response = f'\n {playbookname} playbook sucessfully loaded!'
+        
+        if response:
+            response = f'{ctx.message.author.mention}: ' + response
+        else:
+            response = f'{ctx.message.author.mention}: No matching playbook found.' 
+
+        await ctx.send(response)
+
 
     @commands.command(name='next',help='Go to the next phase in Fiasco',description='Go to the next phase in Fiasco. Phase order: No Game > Setup > Act One > Tilt > Act Two > Aftermath')
     async def botnextphase(self, ctx):
@@ -227,7 +257,7 @@ class fiasco(commands.Cog):
         await ctx.send(response)
 
     @commands.command(name='set',help='Set a relationship or Tilt element')
-    async def botsetelement(self,ctx,p1=None,p2=None,reltype=None,relstring=None):
+    async def botsetelement(self,ctx,p1=None,p2=None,reltype=None,relstring=None,relcat=None):
         responselist = [f'{ctx.message.author.mention}: ']
 
         if self.curphase == 'setup':
@@ -248,6 +278,22 @@ class fiasco(commands.Cog):
                 else:
                     responselist.append(f'No matching player found, unable to update player name.')
         
+            elif self.playbook and relcat:
+                #(use numeric notation to set elements)
+                reltype = checkabbrs(reltype.lower(),self.pbstuff)
+                try:
+                    if reltype:
+                        if reltype == 'relationships':
+                            responselist.append(setrelationshipinfo(self.allrelationships,p1.lower(),p2.lower(),'parentcategory',self.playbook[reltype].get(relstring)['category'].title(),False))
+                            responselist.append(setrelationshipinfo(self.allrelationships,p1.lower(),p2.lower(),'parentelement',self.playbook[reltype].get(relstring).get(relcat))) # this will error if the input is bad.. i'm a little too lazy to handle it atm
+                        else:
+                            responselist.append(setrelationshipinfo(self.allrelationships,p1.lower(),p2.lower(),'detailtype',reltype[:-1],False))
+                            responselist.append(setrelationshipinfo(self.allrelationships,p1.lower(),p2.lower(),'detailcategory',self.playbook[reltype].get(relstring)['category'].title(),False))
+                            responselist.append(setrelationshipinfo(self.allrelationships,p1.lower(),p2.lower(),'detailelement',self.playbook[reltype].get(relstring).get(relcat)))
+                    else:
+                        responselist.append(f'Invalid input. Example: .set sara joe rel 3 2 or .set joe karl parentelement "fellow camp counselors"')
+                except KeyError:
+                    responselist.append(f'Invalid input. Example: .set sara joe rel 3 2 or .set joe karl parentelement "fellow camp counselors"')
             elif not p1 or not p2 or not reltype or not relstring:
                 responselist.append('Invalid input. Example: .set joe karl parentelement "fellow camp counselors" or .set newname joe "Jim aka Sweaty"')
             else:
@@ -290,7 +336,7 @@ class fiasco(commands.Cog):
         username = None
         responselist = [f'{ctx.message.author.mention}: ']
         
-        thingstocheck = ["relationships","dice","tiltelements","all"]
+        thingstocheck = ["relationships","dice","tiltelements","all","tilttable","playbook"]
         showwhat = checkabbrs(showwhat,thingstocheck)
 
         if showwhat == 'dice' or showwhat == 'all':
@@ -335,7 +381,6 @@ class fiasco(commands.Cog):
                 responselist.append('*No Tilt elements to display.* Use .show tilttable to see the Tilt table.')
 
         if showwhat =='tilttable':
-            
             t = loadtables(self.tablefile,'softtilt') if playername == 'soft' else loadtables(self.tablefile,'tilt') # toggle to show the soft tilt table instead
 
             resp = '*Tilt Table:* ```'
@@ -346,6 +391,27 @@ class fiasco(commands.Cog):
                 resp += '\n'
             resp += '```'
             responselist.append(resp)
+
+        if showwhat == 'playbook':
+            # playername var needs to be set to relationships, needs, objects, or locations
+            
+            if not self.playbook:
+                responselist.append('No playbook loaded.')
+            else:
+                relcat = checkabbrs(playername,self.pbstuff)
+                if relcat not in self.pbstuff:
+                    responselist.append('Please specify what kind of playbook information you would like to display: relationships, needs, objects, or locations.')
+                else:
+                    resp = f'*"{self.playbook["playbookname"]}" Playbook ({relcat.title()}):* ```'
+                    t = self.playbook[relcat]
+
+                    for num in t:
+                        resp += f'{num}: {t.get(num).get("category").upper()}'
+                        for x in range(1,7):
+                            resp += f'\n\t{x}: {t.get(num).get(str(x))}'
+                        resp += '\n\n'
+                    resp += '```'
+                    responselist.append(resp)
 
         response = "\n".join(responselist)
         await ctx.send(response)
