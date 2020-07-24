@@ -20,7 +20,7 @@ class fiasco(commands.Cog):
         self.phaseorder = ('no game','setup','act one','tilt','act two','aftermath','reset')
         self.stuntdice = 0 # how many stunt dice are there, if any. stunt dice do not inherently have a type? need to toggle whether stunt dice have a type - mostly only matters for display
         self.stunttype = False # do stunt dice have a type?
-        self.playbook =  dict()
+        self.playset =  dict()
         self.pbstuff = ('relationships','needs','objects','locations')
 
     # func for toggling stunt dice
@@ -52,8 +52,8 @@ class fiasco(commands.Cog):
         else:
             return None
 
-    @commands.command(name='playbook',help='Load a playbook from a json file in the playbooks folder.')
-    async def botloadplaybook(self, ctx, playbookname='nah'):
+    @commands.command(name='playset',help='Load a playset from a json file in the playsets folder.')
+    async def botloadplayset(self, ctx, playsetname='nah'):
         
         response = ''
 
@@ -61,19 +61,19 @@ class fiasco(commands.Cog):
             response = 'This command cannot be used while a game is in progress.'
         else: 
             
-            pbpath = Path(__file__).parent.joinpath('playbooks')
+            pbpath = Path(__file__).parent.joinpath('playsets')
             for file in pbpath.glob('*.json'):
                 pbname = file.stem.lower().split("-")[1]
 
-                if pbname == playbookname.lower():
+                if pbname == playsetname.lower():
                     with file.open(mode='r') as fin:
-                        self.playbook = json.load(fin)
-                    response = f'\n "{self.playbook["playbookname"]}" playbook sucessfully loaded!'
+                        self.playset = json.load(fin)
+                    response = f'\n "{self.playset["playsetname"]}" playset sucessfully loaded!'
         
         if response:
             response = f'{ctx.message.author.mention}: ' + response
         else:
-            response = f'{ctx.message.author.mention}: No matching playbook found.' 
+            response = f'{ctx.message.author.mention}: No matching playset found.' 
 
         await ctx.send(response)
 
@@ -278,18 +278,18 @@ class fiasco(commands.Cog):
                 else:
                     responselist.append(f'No matching player found, unable to update player name.')
         
-            elif self.playbook and relcat:
+            elif self.playset and relcat:
                 #(use numeric notation to set elements)
                 reltype = checkabbrs(reltype.lower(),self.pbstuff)
                 try:
                     if reltype:
                         if reltype == 'relationships':
-                            responselist.append(setrelationshipinfo(self.allrelationships,p1.lower(),p2.lower(),'parentcategory',self.playbook[reltype].get(relstring)['category'].title(),False))
-                            responselist.append(setrelationshipinfo(self.allrelationships,p1.lower(),p2.lower(),'parentelement',self.playbook[reltype].get(relstring).get(relcat))) # this will error if the input is bad.. i'm a little too lazy to handle it atm
+                            responselist.append(setrelationshipinfo(self.allrelationships,p1.lower(),p2.lower(),'parentcategory',self.playset[reltype].get(relstring)['category'].title(),False))
+                            responselist.append(setrelationshipinfo(self.allrelationships,p1.lower(),p2.lower(),'parentelement',self.playset[reltype].get(relstring).get(relcat))) # this will error if the input is bad.. i'm a little too lazy to handle it atm
                         else:
                             responselist.append(setrelationshipinfo(self.allrelationships,p1.lower(),p2.lower(),'detailtype',reltype[:-1],False))
-                            responselist.append(setrelationshipinfo(self.allrelationships,p1.lower(),p2.lower(),'detailcategory',self.playbook[reltype].get(relstring)['category'].title(),False))
-                            responselist.append(setrelationshipinfo(self.allrelationships,p1.lower(),p2.lower(),'detailelement',self.playbook[reltype].get(relstring).get(relcat)))
+                            responselist.append(setrelationshipinfo(self.allrelationships,p1.lower(),p2.lower(),'detailcategory',self.playset[reltype].get(relstring)['category'].title(),False))
+                            responselist.append(setrelationshipinfo(self.allrelationships,p1.lower(),p2.lower(),'detailelement',self.playset[reltype].get(relstring).get(relcat)))
                     else:
                         responselist.append(f'Invalid input. Example: .set sara joe rel 3 2 or .set joe karl parentelement "fellow camp counselors"')
                 except KeyError or TypeError:
@@ -336,7 +336,7 @@ class fiasco(commands.Cog):
         username = None
         responselist = [f'{ctx.message.author.mention}: ']
         
-        thingstocheck = ["relationships","dice","tiltelements","all","tilttable","playbook"]
+        thingstocheck = ["relationships","dice","tiltelements","all","tilttable","playset"]
         showwhat = checkabbrs(showwhat,thingstocheck)
 
         if showwhat == 'dice' or showwhat == 'all':
@@ -392,18 +392,18 @@ class fiasco(commands.Cog):
             resp += '```'
             responselist.append(resp)
 
-        if showwhat == 'playbook':
+        if showwhat == 'playset':
             # playername var needs to be set to relationships, needs, objects, or locations
             
-            if not self.playbook:
-                responselist.append('No playbook loaded.')
+            if not self.playset:
+                responselist.append('No playset loaded.')
             else:
                 relcat = checkabbrs(playername,self.pbstuff)
                 if relcat not in self.pbstuff:
-                    responselist.append('Please specify what kind of playbook information you would like to display: relationships, needs, objects, or locations.')
+                    responselist.append('Please specify what kind of playset information you would like to display: relationships, needs, objects, or locations.')
                 else:
-                    resp = f'*"{self.playbook["playbookname"]}" Playbook ({relcat.title()}):* ```'
-                    t = self.playbook[relcat]
+                    resp = f'*"{self.playset["playsetname"]}" Playset ({relcat.title()}):* ```'
+                    t = self.playset[relcat]
 
                     for num in t:
                         resp += f'{num}: {t.get(num).get("category").upper()}'

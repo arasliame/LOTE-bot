@@ -9,4 +9,4 @@ discordbot.code-workspace
 __pycache__/
 *.py[cod]
 readpdf
-playbooks
+playsets

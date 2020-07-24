@@ -15,6 +15,7 @@ def tableofcontents(pdffile):
     toc = dict()
     prevdest = None
     for dest in outline: 
+        print(dest)
         toc[dest.title] = {"startpage":reader.getDestinationPageNumber(dest)}
         if prevdest:
             toc[prevdest.title]["endpage"] = reader.getDestinationPageNumber(dest)
@@ -101,6 +102,7 @@ if __name__ == "__main__":
         for section in toc:
             if section not in ['Boilerplate','Table of Contents','Foreword']:
                 sectionlines = getsection(reader,toc[section].get("startpage"),toc[section].get("endpage"))
+                print(sectionlines)
                 playbookdict = loadplaybook(sectionlines)
                 playbookdict["playbookname"] = section
                 print(section)
