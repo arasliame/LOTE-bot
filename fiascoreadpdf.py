@@ -102,7 +102,7 @@ if __name__ == "__main__":
         for section in toc:
             if section not in ['Boilerplate','Table of Contents','Foreword']:
                 sectionlines = getsection(reader,toc[section].get("startpage"),toc[section].get("endpage"))
-                print(sectionlines)
+                #print(sectionlines)
                 playbookdict = loadplaybook(sectionlines)
                 playbookdict["playbookname"] = section
                 print(section)
