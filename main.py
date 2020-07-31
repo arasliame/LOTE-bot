@@ -15,11 +15,11 @@ logging.basicConfig(level=logging.WARNING,
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 bot = commands.Bot(command_prefix='.')
-'''
+
 @bot.event
 async def on_command_error(ctx,error):
     logging.error(f"Unhandled message: {error}. Command: {ctx.command}. Args: {ctx.args}")
-    print(error)'''
+    print(error)
 
 @bot.event
 async def on_ready():

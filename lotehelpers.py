@@ -7,12 +7,18 @@ import logging
 
 
 # roll plus a modifier
-def rollmod(mod=0):
+def rollmod(mod=0,addtlmod=0):
     d1 = random.randint(1,6)
     d2 = random.randint(1,6)
     total = d1 + d2 + mod
     modsign = '+' if mod >= 0 else ''
-    return (total,f'({d1}+{d2}){modsign}{mod} = **{total}**')
+
+    if addtlmod != 0:
+        total += addtlmod
+        amodsign = '+' if addtlmod >=0 else ''
+        return (total,f'({d1}+{d2}){modsign}{mod}{amodsign}{addtlmod} = **{total}**')
+    else:
+        return (total,f'({d1}+{d2}){modsign}{mod} = **{total}**')
 
 # check for roll result based on PbTA tiers
 def checksuccess(roll):
@@ -86,12 +92,12 @@ def matchuser(username,chardata):
             return character
 
 # roll a specific move based on a character sheet
-def charmove(moveinfo,charinfo):
+def charmove(moveinfo,charinfo,modifier=0):
     if not moveinfo or not charinfo:
         return
 
     stat = moveinfo["stat"]
-    roll = rollmod(charinfo.get("stats").get(stat))
+    roll = rollmod(charinfo.get("stats").get(stat),modifier)
 
     return roll
 
@@ -106,9 +112,15 @@ def moveresult(moveinfo,roll):
     return moveresult
 
 # make the bot roll a character move
-def botcharmove(ctx,moveinfo,charinfo):
-    roll = charmove(moveinfo, charinfo)
-    mod = f'{moveinfo.get("name").title()} (+{moveinfo.get("stat").title()})'
+def botcharmove(ctx,moveinfo,charinfo,modifier=0):
+    roll = charmove(moveinfo, charinfo,modifier)
+    
+    if modifier != 0:
+        modsign = '+' if modifier >0 else ''
+        mod = f'{moveinfo.get("name").title()} (+{moveinfo.get("stat").title()} and {modsign}{modifier})'
+    else:
+        mod = f'{moveinfo.get("name").title()} (+{moveinfo.get("stat").title()})'
+
     response = responsestr(ctx,charinfo,mod,roll,moveinfo)
 
     return response

@@ -38,25 +38,34 @@ class LOTE(commands.Cog):
             await ctx.send(response)
 
     @commands.command(name='m', help='Do a specific move',description='By default, use the character your Discord user is associated with, or specify a character to roll for.\n Usage: .m [name of move or abbreviation] [*character]')
-    async def rollformove(self,ctx,move=None,character="user"):
+    async def rollformove(self,ctx,move=None,modifier='0',character="user"):
+
         character = matchabbr(character,self.chardata)
         charinfo,response = botgetcharinfo(ctx,character,self.chardata)    
-        
+
+        try:
+            modifier = int(modifier)
+            if abs(modifier) > 5:
+                response = f'{ctx.message.author.mention}: Modifiers cannot be greater than +5 or less than -5, try again.'
+        except:
+            response = f'{ctx.message.author.mention}: Invalid modifier, try again.'
+
         if response:
             await ctx.send(response)
-
-        # find moves that are specific to a character
-        cmovedata = addcharmoves(charinfo,self.movedata)
-        if move:
-            move = matchabbr(move,cmovedata)
-
-        if move not in cmovedata:
-            response = f'{ctx.message.author.mention}: Invalid move, try again.'
         else:
-            moveinfo = cmovedata[move]
-            response = botcharmove(ctx,moveinfo,charinfo)
-                
-        await ctx.send(response)
+
+            # find moves that are specific to a character
+            cmovedata = addcharmoves(charinfo,self.movedata)
+            if move:
+                move = matchabbr(move,cmovedata)
+
+            if move not in cmovedata:
+                response = f'{ctx.message.author.mention}: Invalid move, try again.'
+            else:
+                moveinfo = cmovedata[move]
+                response = botcharmove(ctx,moveinfo,charinfo,modifier)
+                    
+            await ctx.send(response)
 
     @commands.command(name='list', help='List all moves, characters, or specific character stats',description='Type m to see moves, c to see characters, or a character\'s name to see their stats.')
     async def liststuff(self,ctx,listtype='m'):
