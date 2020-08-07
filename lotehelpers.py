@@ -96,8 +96,8 @@ def charmove(moveinfo,charinfo,modifier=0):
     if not moveinfo or not charinfo:
         return
 
-    stat = moveinfo["stat"]
-    roll = rollmod(charinfo.get("stats").get(stat),modifier)
+    stat = moveinfo.get("stat")
+    roll = rollmod(charinfo.get("stats").get(stat),modifier) if stat else rollmod(0,modifier)
 
     return roll
 
@@ -115,11 +115,15 @@ def moveresult(moveinfo,roll):
 def botcharmove(ctx,moveinfo,charinfo,modifier=0):
     roll = charmove(moveinfo, charinfo,modifier)
     
+    stat = moveinfo.get("stat")
+    if not stat:
+        stat = "0"
+
     if modifier != 0:
         modsign = '+' if modifier >0 else ''
-        mod = f'{moveinfo.get("name").title()} (+{moveinfo.get("stat").title()} and {modsign}{modifier})'
+        mod = f'{moveinfo.get("name").title()} (+{stat.title()} and {modsign}{modifier})'
     else:
-        mod = f'{moveinfo.get("name").title()} (+{moveinfo.get("stat").title()})'
+        mod = f'{moveinfo.get("name").title()} (+{stat.title()})'
 
     response = responsestr(ctx,charinfo,mod,roll,moveinfo)
 

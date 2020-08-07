@@ -53,6 +53,14 @@
             "ms": "Choose one: \n - Add +1 to your next roll \n - Add an Environment Tag to the scene \n - Place a Tag on the target you’re gaining a position on \n - You’re safe from imminent attack. \n If used against another player character, add this option to the list:\n - The target needs to Stand Fast to act against you."
         }
     },
+    "help": {
+        "name": "Help",
+        "description": "When you help another player character’s Move, roll +nothing. If they Respect you, add +2 to the roll.",
+        "results": {
+            "gs": "Add +2 to the other player character's Move.",
+            "ms": "Add +2 to the other player character's Move, but you get yourself in trouble in the process."
+        }
+    },
     "observe carefully": {
         "name": "Observe Carefully",
         "stat": "keen",
