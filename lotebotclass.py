@@ -135,7 +135,7 @@ class LOTE(commands.Cog):
     @commands.command(name='update', help='Update a value on a character\'s sheet',description='Update a value on a character\'s sheet. This can be overwritten unless saved using the save command. \n Usage: .set fluid 3 katara')
     async def outputlist(self,ctx,key=None,newval=None,character='user'):
         if not newval or not key:
-            response = f'{ctx.message.author.mention}: Invalid input, try again. Example syntax: .set fluid 3 katara.'
+            response = f'{ctx.message.author.mention}: Invalid input, try again. Example syntax: .update fluid 3 katara.'
         else:
             character = matchabbr(character,self.chardata)
             charinfo,response = botgetcharinfo(ctx,character,self.chardata)
@@ -162,7 +162,7 @@ class LOTE(commands.Cog):
                     else:
                         response = f"{ctx.message.author.mention}: {charinfo.get('character name')}\\'s {stat.title()} stat is already equal to {newstat}. No changes made."
                 else:
-                    response = f'{ctx.message.author.mention}: Invalid input, try again. Example syntax: .set fluid 3 katara'
+                    response = f'{ctx.message.author.mention}: Invalid input, try again. Example syntax: .update fluid 3 katara'
 
             await ctx.send(response)
 
