@@ -62,6 +62,7 @@ def checkvalidstat(stat):
     except ValueError or TypeError:
         return None
 
+
 # make a temporary dict for custom character moves
 def addcharmoves(charinfo,movedata):
     cmovedata = charinfo["custom moves"].copy()

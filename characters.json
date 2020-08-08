@@ -7,7 +7,7 @@
         "stats": {
             "natural": -1,
             "hot": 2,
-            "solid": 1,
+            "solid": 2,
             "keen": 0,
             "fluid": 1
         },
@@ -47,7 +47,7 @@
         "username": "shamisen__#4905",
         "player name": "Karl",
         "stats": {
-            "natural": -1,
+            "natural": 0,
             "hot": 2,
             "solid": 1,
             "keen": 0,

@@ -136,9 +136,9 @@ class LOTE(commands.Cog):
     async def outputlist(self,ctx,key=None,newval=None,character='user'):
         if not newval or not key:
             response = f'{ctx.message.author.mention}: Invalid input, try again. Example syntax: .set fluid 3 katara.'
-        
-        character = matchabbr(character,self.chardata)
-        charinfo,response = botgetcharinfo(ctx,character,self.chardata)
+        else:
+            character = matchabbr(character,self.chardata)
+            charinfo,response = botgetcharinfo(ctx,character,self.chardata)
 
         
         if response:
@@ -154,7 +154,7 @@ class LOTE(commands.Cog):
                 stat = matchabbr(key,self.allstats)
                 if stat in self.allstats:
                     newstat = checkvalidstat(newval)
-                    if not newstat:
+                    if not newstat and newstat != 0:
                         response = f'{ctx.message.author.mention}: Invalid input, try again. Stats can only be set to a maximum of +3.'
                     elif charinfo['stats'][stat] != newstat:
                         response = f"{ctx.message.author.mention}: {charinfo.get('character name')}\\'s {stat.title()} stat has been changed from {charinfo['stats'][stat]} to {newstat}."
@@ -164,7 +164,7 @@ class LOTE(commands.Cog):
                 else:
                     response = f'{ctx.message.author.mention}: Invalid input, try again. Example syntax: .set fluid 3 katara'
 
-        await ctx.send(response)
+            await ctx.send(response)
 
 
     @commands.command(name='save', help='Save all current character stats to file',description='Stats will be overrwritten on bot restart, unless saved using this command.')
