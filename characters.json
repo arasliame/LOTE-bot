@@ -125,6 +125,15 @@
                     "gs": "A controlled rapid surge of life begins to heal the damaged elements.",
                     "ms": "Choose one: \n - Life returns, but not as you expected. \n - Mutations cause the new life to grow beyond even your control. \n - It will take great time to heal."
                 }
+            },
+            "nature's currency": {
+                "name": "Nature's Currency",
+                "stat": "keen",
+                "description": "You hold no coin or wealth, for that is not as nature intended. When payment is necessary, roll +Keen.",
+                "results": {
+                    "gs": "You get what you want for mere kind words and good will.",
+                    "ms": "You can find some other means of barter that they’ll accept."
+                }
             }
         }
     }

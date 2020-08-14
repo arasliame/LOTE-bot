@@ -66,8 +66,8 @@
         "stat": "keen",
         "description": "When you observe something carefully, whether it be a person or a situation, roll +Keen.",
         "results": {
-            "gs": "Ask three questions from the below list. After you hear the answers, you can add a Tag or Environment Tag describing the situation. \n - What do I need to do to be at an advantage here? \n - What is about to happen? \n - What should I be watching for? \n - Who is in control here?",
-            "ms": "Ask one question from the below list. After you hear the answers, you can add a Tag or Environment Tag describing the situation. \n - What do I need to do to be at an advantage here? \n - What is about to happen? \n - What should I be watching for? \n - Who is in control here?"
+            "gs": "Ask three questions from the below list. After you hear the answers, you can add a Tag or Environment Tag describing the situation. \n - What do I need to do to be at an advantage here? \n - What here is not as it appears? \n - What is about to happen? \n - What should I be watching for? \n - Who is in control here?",
+            "ms": "Ask one question from the below list. After you hear the answers, you can add a Tag or Environment Tag describing the situation. \n - What do I need to do to be at an advantage here? \n - What here is not as it appears? \n - What is about to happen? \n - What should I be watching for? \n - Who is in control here?"
         }
     }
 }
