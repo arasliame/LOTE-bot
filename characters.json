@@ -51,7 +51,7 @@
             "hot": 2,
             "solid": 1,
             "keen": 0,
-            "fluid": 1
+            "fluid": 2
         },
         "chakra1": "volatile and explosive",
         "chakra2": "honorable and disciplined",
@@ -63,6 +63,24 @@
                 "results": {
                     "gs": "Your flame does exactly what you want, Tagging targets as appropriate.",
                     "ms": "Tag your target as appropriate, but you also lose control of your flame in some manner, choose one: \n - The flames are larger and more taxing than intended. They burn hot and strong, but take -1 to the next roll you make. \n - The flames explode into being, injuring all nearby, including the Fireshaper. Add Tags as appropriate.\n - You set fire to the area. Add a relevant Environment Tag."
+                }
+            },
+            "lightningbending": {
+                "name": "Lightningbending",
+                "stat": "fluid",
+                "description": "When you channel lightning, roll +Fluid.",
+                "results": {
+                    "gs": "You succeed at projecting or redirecting the lightning strike.",
+                    "ms": "Choose 1: \n - Some power rebounds, shocking and Tagging the shaper as well. \n - The lightning doesn’t strike the target, but all that can see it gain the Dazed Tag.\n - The blast misses but causes explosive and chaotic damage; the MC adds an appropriate Environment Tag."
+                }
+            },
+            "cartoonish": {
+                "name": "Cartoonish",
+                "stat": "fluid",
+                "description": "You can take a beating and shrug it off like it’s nothing, be it a frying pan or dynamite. When you are assaulted, roll +Fluid to take the hit.",
+                "results": {
+                    "gs": "Your Act takes over and absorbs the strike.",
+                    "ms": "You take the Tag as a Mild Tag, regardless of its original severity."
                 }
             }
         }
@@ -132,7 +150,16 @@
                 "description": "You hold no coin or wealth, for that is not as nature intended. When payment is necessary, roll +Keen.",
                 "results": {
                     "gs": "You get what you want for mere kind words and good will.",
-                    "ms": "You can find some other means of barter that they’ll accept."
+                    "ms": "You can find some other means of barter that they'll accept."
+                }
+            },
+            "look to the clouds": {
+                "name": "Look to the Clouds!",
+                "stat": "natural",
+                "description": "When deciphering the future concerning major events, roll +Natural.",
+                "results": {
+                    "gs": "You determine how imminent tragedy is, and how to postpone it.",
+                    "ms": "Choose one: \n - You see two or more paths for the future, both equally poor.\n - Broken images, distorted voices, foreign lands. The MC will say who you need to consult others to put the puzzle pieces together. \n - The elements reveal two conflicting messages.\n - The solution demands great sacrifice.."
                 }
             }
         }
