@@ -6,19 +6,29 @@
         "player name": "Joe",
         "stats": {
             "natural": -1,
-            "hot": 2,
+            "hot": 3,
             "solid": 2,
             "keen": 0,
-            "fluid": 1
+            "fluid": 2
         },
         "chakra1": "violent and frightening",
         "chakra2": "relentlessly driven toward single goal",
-        "custom moves": {}
+        "custom moves": {
+            "enter the void": {
+                "name": "Enter the Void",
+                "stat": "fluid",
+                "description": "You are no longer bound to the world in the way others are. When you move as if the laws of physics don’t affect you (by defying gravity, moving smoothly through water, or even teleporting short distances), roll +Fluid.",
+                "results": {
+                    "gs": "Your motions are effortless, amazing even!",
+                    "ms": "You break the laws of physics, but take the Unmoored Tag as you start to lose your connection to reality."
+                }
+            }
+        }
     },
     "leigh": {
         "character name": "Leigh",
         "playbook": "The Airshaper",
-        "username": "gnersesy#4330",
+        "username": "not-garcher#4330",
         "player name": "Gaya",
         "stats": {
             "natural": 2,
@@ -50,7 +60,7 @@
             "natural": 0,
             "hot": 2,
             "solid": 1,
-            "keen": 0,
+            "keen": 1,
             "fluid": 2
         },
         "chakra1": "volatile and explosive",
@@ -121,9 +131,9 @@
             "hot": -1,
             "solid": 0,
             "keen": 1,
-            "fluid": 1
+            "fluid": 2
         },
-        "chakra1": "easygoing and carefree",
+        "chakra1": "strange and unsettling",
         "chakra2": "honest and direct",
         "custom moves": {
             "force of nature": {
@@ -144,22 +154,66 @@
                     "ms": "Choose one: \n - Life returns, but not as you expected. \n - Mutations cause the new life to grow beyond even your control. \n - It will take great time to heal."
                 }
             },
-            "nature's currency": {
-                "name": "Nature's Currency",
-                "stat": "keen",
-                "description": "You hold no coin or wealth, for that is not as nature intended. When payment is necessary, roll +Keen.",
+            "decay": {
+                "name": "Decay",
+                "stat": "fluid",
+                "description": "The elder oak must fall so that saplings may grow. When you contribute to the destruction of life for something else to survive, roll +Fluid.",
                 "results": {
-                    "gs": "You get what you want for mere kind words and good will.",
-                    "ms": "You can find some other means of barter that they'll accept."
+                    "gs": "A positive sign reveals itself through the elements as an Environment Tag.",
+                    "ms": "You feel ill at ease and should make an offering to appease the spirits."
                 }
             },
-            "look to the clouds": {
-                "name": "Look to the Clouds!",
-                "stat": "natural",
-                "description": "When deciphering the future concerning major events, roll +Natural.",
+            "mindwarp": {
+                "name": "Mindwarp",
+                "stat": "fluid",
+                "description": "When you exert your will over a being's essence, roll +Fluid. If used against another player character, treat the command as an Oath.",
                 "results": {
-                    "gs": "You determine how imminent tragedy is, and how to postpone it.",
-                    "ms": "Choose one: \n - You see two or more paths for the future, both equally poor.\n - Broken images, distorted voices, foreign lands. The MC will say who you need to consult others to put the puzzle pieces together. \n - The elements reveal two conflicting messages.\n - The solution demands great sacrifice.."
+                    "gs": "It falls under your influence (perhaps with resentment).",
+                    "ms": "It contorts your command, fights you for control, or has some influence over you in return."
+                }
+            }
+        }
+    },
+    "kanna": {
+        "character name": "Kanna",
+        "playbook": "The Waterbender",
+        "username": "garcher#4330",
+        "player name": "Gaya",
+        "stats": {
+            "natural": 1,
+            "hot": -1,
+            "solid": 0,
+            "keen": 1,
+            "fluid": 2
+        },
+        "chakra1": "mothering and parental",
+        "chakra2": "enthusiastic and impatient",
+        "custom moves": {
+            "airbending": {
+                "name": "Waterbending",
+                "stat": "fluid",
+                "description": "You have a small supply of Water. You can carry up to 3 Water, which is replenished whenever you come across a sufficient body of water. When you manipulate water in combat, spend 1 Water and roll +Fluid.",
+                "results": {
+                    "gs": "Choose two: \n - Impose a Tag on a foe. \n - Impose an Environment tag. \n - Get the spent Water back.",
+                    "ms": "Choose one: \n - Impose a Tag on a foe. \n - Impose an Environment tag. \n - Get the spent Water back."
+                }
+            },
+            "healer": {
+                "name": "Healer",
+                "stat": "natural",
+                "description": "When you take time to cover a wound with your element and lay hands upon it, roll +Natural.",
+                "results": {
+                    "gs": "The wound is visibly cured and the subject refreshed.",
+                    "ms": "Serious wounds are healed but superficial ones remain."
+                }
+            },
+            "bloodbending": {
+                "name": "Bloodbending",
+                "stat": "Hot",
+                "description": "When you manipulate a non-player character’s blood to control their body, roll +Hot. You only get to command their body, never their mind. Bloodbending takes total mental and physical concentration.",
+                "results": {
+                    "gs": "Your hold is firm and lasts until you release your concentration.",
+                    "ms": "Your hold lasts for but moments, enough time for an action or two at most."
                 }
             }
         }
