@@ -1,0 +1,73 @@
+{ 
+    "speak honorably": {
+        "name": "Speak Honorably",
+        "stat": "natural",
+        "description": "When you speak honorably to persuade, convince, or manipulate an MC character, tell the MC what you want and roll +Natural.",
+        "results": {
+            "gs": "You get what you want and can Tag the MC character as long as you promise them something they’ll get in return.",
+            "ms": "You get what you want but there are immediate and troublesome strings attached."
+        }
+    },
+    "meditate": {
+        "name": "Meditate",
+        "stat": "natural",
+        "description": "When you spend time in uninterrupted contemplation, say what you’re thinking about and roll +Natural.",
+        "results": {
+            "gs": "Declare a detail about that subject to be true.",
+            "ms": "The MC declares a relevant detail about the subject."
+        }
+    },
+    "act dishonorably": {
+        "name": "Act Dishonorably",
+        "stat": "hot",
+        "description": "When you act in a threatening way to get what you want, roll +Hot.",
+        "results": {
+            "gs": "Opponent needs to choose whether to give in or face your wrath.",
+            "ms": "You might not get what you want, but you've pushed them to (MC chooses one): \n - Escalate with a counter-proposal \n - Flee in cowardice \n - Provide what they think you want"
+        }
+    },
+    "commit open violence": {
+        "name": "Commit Open Violence",
+        "stat": "hot",
+        "description": "When you strike out violently with intent to kill or incapacitate, roll +Hot.",
+        "results": {
+            "gs": "Your attack is successful; Tag the target appropriately.",
+            "ms": "Your attack is successful and you can Tag the target, but your move comes with complications. Choose one: \n - You don't Tag them \n - You're left in a disadvantageous position \n - You're left open to their counterattack"
+        }
+    },
+    "stand fast": {
+        "name": "Stand Fast",
+        "stat": "solid",
+        "description": "When you act in reaction or under pressure, roll +Solid.",
+        "results": {
+            "gs": "You do it, no problem!",
+            "ms": "The MC will offer you a tough choice, hard bargain, or dangerous outcome."
+        }
+    },
+    "move with intention": {
+        "name": "Move With Intention",
+        "stat": "fluid",
+        "description": "When you move deliberately to gain a position of strength, roll +Fluid.",
+        "results": {
+            "gs": "Choose two: \n - Add +1 to your next roll \n - Add an Environment Tag to the scene \n - Place a Tag on the target you’re gaining a position on \n - You’re safe from imminent attack. \n If used against another player character, add this option to the list:\n - The target needs to Stand Fast to act against you",
+            "ms": "Choose one: \n - Add +1 to your next roll \n - Add an Environment Tag to the scene \n - Place a Tag on the target you’re gaining a position on \n - You’re safe from imminent attack. \n If used against another player character, add this option to the list:\n - The target needs to Stand Fast to act against you."
+        }
+    },
+    "help": {
+        "name": "Help",
+        "description": "When you help another player character’s Move, roll +nothing. If they Respect you, add +2 to the roll.",
+        "results": {
+            "gs": "Add +2 to the other player character's Move.",
+            "ms": "Add +2 to the other player character's Move, but you get yourself in trouble in the process."
+        }
+    },
+    "observe carefully": {
+        "name": "Observe Carefully",
+        "stat": "keen",
+        "description": "When you observe something carefully, whether it be a person or a situation, roll +Keen.",
+        "results": {
+            "gs": "Ask three questions from the below list. After you hear the answers, you can add a Tag or Environment Tag describing the situation. \n - What do I need to do to be at an advantage here? \n - What here is not as it appears? \n - What is about to happen? \n - What should I be watching for? \n - Who is in control here?",
+            "ms": "Ask one question from the below list. After you hear the answers, you can add a Tag or Environment Tag describing the situation. \n - What do I need to do to be at an advantage here? \n - What here is not as it appears? \n - What is about to happen? \n - What should I be watching for? \n - Who is in control here?"
+        }
+    }
+}

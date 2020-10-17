@@ -26,8 +26,8 @@ async def on_ready():
     readystr = f'{bot.user.name} has connected to Discord!'
     print(readystr)
     logging.info(readystr)
-    bot.load_extension('lotebotclass')
-    bot.load_extension('fiascobotclass')
+    bot.load_extension('pbtabotclass')
+   # bot.load_extension('fiascobotclass')
      # add command to toggle game?
 
 if __name__ == "__main__":
