@@ -1,0 +1,86 @@
+{
+    "mavis": {
+        "character name": "Mavis Pennycandy",
+        "style": "Efforlessly Smokin'",
+        "username": "Alakadayummm#5334",
+        "player name": "Joe",
+        "stats": {
+            "vitality": 0,
+            "composure": 1,
+            "reason": 1,
+            "presence": 1,
+            "sensitivity": -1
+        },
+        "cozy activity": "Birding"
+    },
+    "karl": {
+        "character name": "???",
+        "style": "???",
+        "username": "shamisen__#4905",
+        "player name": "Karl",
+        "stats": {
+            "vitality": 0,
+            "composure": 1,
+            "reason": 2,
+            "presence": 0,
+            "sensitivity": -1
+        },
+        "cozy activity": "???"
+    },
+    "pearl": {
+        "character name": "Pearl Donahue",
+        "style": "Jackie O",
+        "username": "Carmine#3569",
+        "player name": "Colin",
+        "stats": {
+            "vitality": 0,
+            "composure": 1,
+            "reason": 2,
+            "presence": 0,
+            "sensitivity": -1
+        },
+        "cozy activity": "Antiques & Furniture"
+    },
+    "kanna": {
+        "character name": "Kanna the Witch",
+        "style": "Spooky",
+        "username": "garcher#4330",
+        "player name": "Gaya",
+        "stats": {
+            "vitality": 0,
+            "composure": 1,
+            "reason": 1,
+            "presence": 0,
+            "sensitivity": 0
+        },
+        "cozy activity": "Antiques & Furniture"
+    },
+    "bianca": {
+        "character name": "Bianca Whasitooya",
+        "style": "Unfazed Walking Disaster Area",
+        "username": "~~KOOKS~~#5600",
+        "player name": "Ben",
+        "stats": {
+            "vitality": 0,
+            "composure": 2,
+            "reason": 1,
+            "presence": 0,
+            "sensitivity": -1
+        },
+        "cozy activity": "Antiques & Furniture"
+    },
+    "mabel": {
+        "character name": "Mabel Flores",
+        "style": "Auntie",
+        "username": "sluser#0962",
+        "player name": "Sara",
+        "stats": {
+            "vitality": 0,
+            "composure": 2,
+            "reason": 1,
+            "presence": 0,
+            "sensitivity": -1
+        },
+        "cozy activity": "Knitting"
+    }
+}

@@ -1,0 +1,56 @@
+{ 
+    "the day move": {
+        "name": "The Day Move",
+        "stat": "*choose",
+        "description": "When you _do something risky or face something you fear during the day_, name what you’re afraid will happen if you fail or lose your nerve, then roll with an appropriate ability.",
+        "results": {
+            "12+": "You do what you intended or you hold steady, and the Keeper will tell you some extra benefit or advantage you receive. Describe what it looks like.",
+            "10-11": "You do what you intended or you hold steady; describe what it looks like.",
+            "7-9": "The Keeper will tell you how your actions would leave you vulnerable, and you can choose to back down or go through with it. If you go through with it, the Keeper describes what it looks like.",
+            "6-": "*miss"
+        }
+    },
+    "the night move": {
+        "name": "The Night Move",
+        "stat": "*choose",
+        "description": "When you _do something risky or face something you fear at night_, name what you’re afraid will happen if you fail or lose your nerve. The Keeper will tell you how it is worse than you fear. You can choose to back down or go through with it. If you go through with it, roll with an appropriate ability.",
+        "results": {
+            "12+": "You do what you intended or you hold steady, and the Keeper will tell you some extra benefit or advantage you receive. Describe what it looks like.",
+            "10-11": "You do what you intended or you hold steady; describe what it looks like.",
+            "7-9": "You do it or hold steady, but there is a complication or cost; the Keeper describes what it looks like.",
+            "6-": "*miss"
+        }
+    },
+    "the meddling move": {
+        "name": "The Meddling Move",
+        "stat": "*choose",
+        "description": "When you _search for a clue, conduct research, or otherwise gather information_, describe how you’re doing so and roll with an appropriate ability.",
+        "results": {
+            "12+": "You find a clue. The Keeper will tell you what it is. You also find a Void Clue OR you learn something about the dark conspiracy in Brindlewood Bay (Keeper's choice).",
+            "10-11": "You find a clue. The Keeper will tell you what it is.",
+            "7-9": "There’s a complication — either with the Clue itself, or a complication you encounter while searching. The Keeper will tell you what the complication is.",
+            "6-": "*miss"
+        }
+    },
+    "the occult move": {
+        "name": "The Occult Move",
+        "stat": "sensitivity",
+        "description": "When you _engage in an activity related to the supernatural or the occult for the first time_, imagine what your actions would look like as a move. Say what triggers the move and roll with Sensitivity.",
+        "results": {
+            "12+": "It works; work with the Keeper to write the move - it is now a move all Mavens can use for the rest of the game and your roll stands.",
+            "10-11": "It works; work with the Keeper to write the move - it is now a move all Mavens can use for the rest of the game and your roll stands.",
+            "7-9": "It works; work with the Keeper to write the move - it is now a move all Mavens can use for the rest of the game and your roll stands. However, you must also mark The Crown of the Void.",
+            "6-": "It's not something the Mavens can ever do and you also mark The Crown of the Void."
+        }
+    },    
+    "theorize": {
+        "name": "Theorize",
+        "description": "When the Mavens _have an open, freewheeling discussion about the solution to a mystery based on the clues they have uncovered —and reach a consensus— _ roll plus the number of Clues found (not including Void Clues), minus the mystery’s complexity.",
+        "results": {
+            "12+": "It's the correct solution. The Keeper will present an opportunity to take down the culprit or otherwise save the day. A person involved in the dark conspiracy of Brindlewood Bay also reveals themselves to the Mavens.",
+            "10-11": "It's the correct solution. The Keeper will present an opportunity to take down the culprit or otherwise save the day.",
+            "7-9": "It’s the correct solution, but the Keeper will either add an unwelcome complication to the solution itself, or present a complicated or dangerous opportunity to take down the culprit or save the day.",
+            "6-": "*miss"
+        }
+    }
+}
